@@ -9,8 +9,10 @@
     <meta http-equiv="Creation-Date" content="Wed, 3 Jun 2020 12:35:19 GMT" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"> -->
-    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
     
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+
     <!-- External CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -18,6 +20,9 @@
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='javascript/main.js') }}"></script>
 
     <title>Cyberpuk Tools</title>
 </head>

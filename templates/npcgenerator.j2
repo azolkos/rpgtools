@@ -1,18 +1,42 @@
 {% extends 'index.j2' %}
 
 {% block content %}
-    <table class="w3-left">
+    <table style="border-collapse: collapse;">
         <tr>
-            <td colspan="2">First col</td>
+            <td colspan="8" style="text-align: center; background-color: black; color: white">Name:</td>
+            <td colspan="12"><input type="text" style='width: 100%'></td>
+            <td colspan="8" style="text-align: center; background-color: black; color: white">Role:</td>
+            <td colspan="12"><input type="text" style='width: 100%'></td>
+            {# <table>
+                <tr>
+                    <td colspan="2" class="w3-black w3-center">Handle</td>
+                    <td><input type="text"></input></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="w3-black w3-center">STATS</td>
+                    <td></td>
+                </tr>
+                {% for stat in stats %}
+                <tr>
+                    <td>{{ stat['stat'] }}</td>
+                    <td id="{{ stat['stat'] }}_value">[    ]</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </table> #}
         </tr>
         <tr>
-            <td colspan="2">STATS</td>
+            {% for wound in wounds %}
+            <td colspan="4" id="wound_{{ wound['stun_save_mod'] }}" class="wound_type">{{ wound['abr'] }} {{ wound['stun_save_mod'] }}</td>
+            {% endfor %}
         </tr>
-        {% for stat in stats %}
         <tr>
-            <td>{{ stat["id"] }}</td>
-            <td>[    ]</td>
+            {% for wound in wounds %}
+            <td id="wound_{{ wound['stun_save_mod'] }}_1" class="wound_hitbox" onclick="updateHitbox(this.id)"></td>
+            <td id="wound_{{ wound['stun_save_mod'] }}_2" class="wound_hitbox" onclick="updateHitbox(this.id)"></td>
+            <td id="wound_{{ wound['stun_save_mod'] }}_3" class="wound_hitbox" onclick="updateHitbox(this.id)"></td>
+            <td id="wound_{{ wound['stun_save_mod'] }}_4" class="wound_hitbox" onclick="updateHitbox(this.id)"></td>
+            {% endfor %}
         </tr>
-        {% endfor %}
     </table>
 {% endblock %}

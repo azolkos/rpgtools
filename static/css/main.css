@@ -1,0 +1,10 @@
+.wound_type {
+    border: 1px solid black;
+    padding: 0px 10px
+}
+
+.wound_hitbox {
+    border: 1px solid black;
+    height: 20px
+}
+
