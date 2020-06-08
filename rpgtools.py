@@ -31,8 +31,11 @@ def start():
 @app.route('/npcgenerator')
 def npcgenerator():
     stats = query_db('select * from stats where type = "primary" order by idx')
+    comp_stats = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
+    comp_table = query_db('select max(idx) r, max(idy) c from stats where type != "primary" or type is null')
+    body_types = query_db('select * from body_types')
     wounds = query_db('select * from wounds order by stun_save_mod desc')
-    return render_template('npcgenerator.j2', stats=stats, wounds=wounds)
+    return render_template('npcgenerator.j2', stats=stats, comp_stats=comp_stats, comp_table=comp_table, body_types=body_types, wounds=wounds)
 
 if __name__ == '__main__':
     app.run( debug = True)

@@ -23,22 +23,27 @@ insert into roles (name) values ('Medtechie');
 create table stats (
     stat text not null primary key,
     idx number,
-    type text
+    idy number,
+    type text,
+    multiplier number
 );
-insert into stats (stat,idx,type) values ('INT',1,'primary');
-insert into stats (stat,idx,type) values ('REF',2,'primary');
-insert into stats (stat,idx,type) values ('TECH',3,'primary');
-insert into stats (stat,idx,type) values ('COOL',4,'primary');
-insert into stats (stat,idx,type) values ('ATTR',5,'primary');
-insert into stats (stat,idx,type) values ('LUCK',6,'primary');
-insert into stats (stat,idx,type) values ('MA',7,'primary');
-insert into stats (stat,idx,type) values ('BODY',8,'primary');
-insert into stats (stat,idx,type) values ('EMP',9,'primary');
-insert into stats (stat,idx,type) values ('RUN',10,'MA');
-insert into stats (stat,idx,type) values ('LEAP',11,'MA');
-insert into stats (stat,idx,type) values ('LIFT',12,'MA');
-insert into stats (stat,idx,type) values ('HUMANITY',13,'EMP');
-insert into stats (stat,idx,type) values ('SAVE',14,'BODY');
+insert into stats (stat,idx,idy,type,multiplier) values ('INT',1,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('REF',2,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('TECH',3,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('COOL',4,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('ATTR',5,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('LUCK',6,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('MA',7,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('BODY',8,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('EMP',9,null,'primary',null);
+insert into stats (stat,idx,idy,type,multiplier) values ('RUN',1,1,'MA',3);
+insert into stats (stat,idx,idy,type,multiplier) values ('REP',1,2,null,3);
+insert into stats (stat,idx,idy,type,multiplier) values ('DMG',1,3,null,3);
+insert into stats (stat,idx,idy,type,multiplier) values ('LEAP',2,1,'MA',0.75);
+insert into stats (stat,idx,idy,type,multiplier) values ('SAVE',2,3,'BODY',1);
+insert into stats (stat,idx,idy,type,multiplier) values ('LIFT',3,1,'BODY',40);
+insert into stats (stat,idx,idy,type,multiplier) values ('HUMANITY',3,2,'EMP',10);
+insert into stats (stat,idx,idy,type,multiplier) values ('BTM',3,3,'BODY',null);
 
 create table body_types (
     body_type text not null,
@@ -288,7 +293,6 @@ insert into wounds (wound, abr, stun_save_mod) values ('Mortal 3', 'Mrt', -6);
 insert into wounds (wound, abr, stun_save_mod) values ('Mortal 4', 'Mrt', -7);
 insert into wounds (wound, abr, stun_save_mod) values ('Mortal 5', 'Mrt', -8);
 insert into wounds (wound, abr, stun_save_mod) values ('Mortal 6', 'Mrt', -9);
-
 
 
 

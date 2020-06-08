@@ -1,29 +1,121 @@
 {% extends 'index.j2' %}
 
 {% block content %}
-    <table style="border-collapse: collapse;">
+    <table style="border-collapse: collapse; width: 100%">
         <tr>
-            <td colspan="8" style="text-align: center; background-color: black; color: white">Name:</td>
-            <td colspan="12"><input type="text" style='width: 100%'></td>
-            <td colspan="8" style="text-align: center; background-color: black; color: white">Role:</td>
-            <td colspan="12"><input type="text" style='width: 100%'></td>
-            {# <table>
+            <td colspan="12"><input type="text" style='width: 100%' placeholder="Handle"></td>
+            <td colspan="12"><input type="text" style='width: 100%' placeholder="Role"></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="vertical-align: top">
+                <table style="font-size: 12px">
                 <tr>
-                    <td colspan="2" class="w3-black w3-center">Handle</td>
-                    <td><input type="text"></input></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="w3-black w3-center">STATS</td>
-                    <td></td>
+                    <td colspan="2" style="text-decoration: underline">STATS</td>
                 </tr>
                 {% for stat in stats %}
                 <tr>
                     <td>{{ stat['stat'] }}</td>
-                    <td id="{{ stat['stat'] }}_value">[    ]</td>
-                    <td></td>
+                    <td id="{{ stat['stat'] }}_value">[<input type="text" style="border: none; text-align: center; height: 12px; width: 2ch" onClick="this.select();">]</td>
                 </tr>
                 {% endfor %}
-            </table> #}
+                </table>
+            </td>
+            <td colspan="16" style="vertical-align: top">
+                <table style="font-size: 12px">
+                    <tr>
+                        <td colspan="2" style="text-decoration: underline">SKILLS</td>
+                    </tr>
+                    <tr>
+                        <td>Education & General Knowledge</td>
+                        <td>[99]</td>
+                    </tr>
+                    <tr>
+                        <td>Other skill name</td>
+                        <td>[6]</td>
+                    </tr>
+                </table>
+            </td>
+            <td colspan="20" style="vertical-align: top">
+                <table style="font-size: 12px; width: 100%">
+                    <tr>
+                        <td style="text-decoration: underline">WEAPONS</td>
+                        <td style="text-align: center">type</td>
+                        <td style="text-align: center">skl</td>
+                        <td style="text-align: center">dmg</td>
+                        <td style="text-align: center">#/rof</td>
+                        <td style="text-align: center">rly</td>
+                    </tr>
+                    <tr>
+                        <td>Some name of weapon</td>
+                        <td style="text-align: center">T</td>
+                        <td style="text-align: center">99</td>
+                        <td style="text-align: center">2d6+99</td>
+                        <td style="text-align: center">99/99</td>
+                        <td style="text-align: center">R</td>
+                    </tr>
+                </table>
+                <table style="font-size: 12px; width: 100%">
+                    <tr>
+                        <td style="text-decoration: underline">CYBERWARE</td>
+                    </tr>
+                    <tr>
+                        <td>Some name of cyberware</td>
+                        <td style="text-align: center">T</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="20">
+                <table style="font-size: 12px; width: 100%">
+                    <tr>
+                        <td colspan="6" style="text-decoration: underline">COMPUTED STATS</td>
+                    </tr>
+                    {% for i in range(comp_table[0]['r']) %}
+                        <tr>
+                            {% for j in range(comp_table[0]['c']) %}
+                                <td>
+                                {% for comp_stat in comp_stats if comp_stat['idx'] == i+1 and comp_stat['idy'] == j+1 %}
+                                    {{ comp_stat['stat'] }}    
+                                {% endfor %}
+                                </td>
+                                <td>[99]</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </td>
+            <td colspan="20" style="vertical-align: top">
+                <table style="font-size: 12px; width: 100%">
+                    <tr>
+                        <td colspan="6"><span style="text-decoration: underline">ARMOR</span>: names of armor pieces</td>
+                    </tr>
+                    <tr style="text-align: center">
+                        <td>Head</td>
+                        <td>Torso</td>
+                        <td>R.Arm</td>
+                        <td>L.Arm</td>
+                        <td>R.Leg</td>
+                        <td>L.Leg</td>
+                    </tr>
+                    <tr style="text-align: center">
+                        <td>1</td>
+                        <td>2-4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7-8</td>
+                        <td>9-0</td>
+                    </tr>
+                    <tr style="text-align: center">
+                        <td>[99]</td>
+                        <td>[99]</td>
+                        <td>[99]</td>
+                        <td>[99]</td>
+                        <td>[99]</td>
+                        <td>[99]</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         <tr>
             {% for wound in wounds %}

@@ -24,3 +24,7 @@ function updateHitbox(id) {
         }
     }
 }
+
+function updateCompStats() {
+
+}
