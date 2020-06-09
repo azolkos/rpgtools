@@ -46,7 +46,7 @@ insert into stats (stat,idx,idy,type,multiplier) values ('HUMANITY',3,2,'EMP',10
 insert into stats (stat,idx,idy,type,multiplier) values ('BTM',3,3,'BODY',null);
 
 create table body_types (
-    body_type text not null,
+    body_type text not null primary key,
     pts_from number not null,
     pts_to number,
     modifier number
@@ -57,6 +57,20 @@ insert into body_types (body_type, pts_from, pts_to, modifier) values ('Average'
 insert into body_types (body_type, pts_from, pts_to, modifier) values ('Strong',8,9,-3);
 insert into body_types (body_type, pts_from, pts_to, modifier) values ('Very Strong',10,10,-4);
 insert into body_types (body_type, pts_from, pts_to, modifier) values ('Superhuman',11,null,-5);
+
+create table body_parts (
+    body_part text not null primary key,
+    idx number,
+    d_from number,
+    d_to number
+);
+
+insert into body_parts (body_part, idx, d_from, d_to) values ('Head',1,1,1);
+insert into body_parts (body_part, idx, d_from, d_to) values ('Torso',2,2,4);
+insert into body_parts (body_part, idx, d_from, d_to) values ('L.Arm',3,5,5);
+insert into body_parts (body_part, idx, d_from, d_to) values ('R.Arm',4,6,6);
+insert into body_parts (body_part, idx, d_from, d_to) values ('L.Leg',5,7,8);
+insert into body_parts (body_part, idx, d_from, d_to) values ('R.Leg',6,9,0);
 
 create table task_difficulties (
     difficulty text not null primary key,

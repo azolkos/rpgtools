@@ -1,6 +1,25 @@
 {% extends 'index.j2' %}
 
 {% block content %}
+    {# Table with body type modifiers #}
+    <table style="display: none">
+        <tr>
+            <td>BODY TYPE</td>
+            <td>PTS_FROM</td>
+            <td>PTS_TO</td>
+            <td>MODIFIER</td>
+        </tr>
+        {% for body_type in body_types %}
+        <tr class="body_types">
+            <td class="bodytype_name">{{ body_type['body_type'] }}</td>
+            <td class="bodytype_ptsfrom">{{ body_type['pts_from'] }}</td>
+            <td class="bodytype_ptsto">{{ body_type['pts_to'] }}</td>
+            <td class="bodytype_modifier">{{ body_type['modifier'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {# Main Goon character sheet #}
     <table style="border-collapse: collapse; width: 100%">
         <tr>
             <td colspan="12"><input type="text" style='width: 100%' placeholder="Handle"></td>
@@ -15,7 +34,9 @@
                 {% for stat in stats %}
                 <tr>
                     <td>{{ stat['stat'] }}</td>
-                    <td id="{{ stat['stat'] }}_value">[<input type="text" style="border: none; text-align: center; height: 12px; width: 2ch" onClick="this.select();">]</td>
+                    <td id="{{ stat['stat'] }}_value">[<input id="{{ stat['stat'] }}" type="number" 
+                        style="border: none; text-align: center; height: 12px; width: 2ch" 
+                        onClick="this.select();" onchange="updateCompStats()">]</td>
                 </tr>
                 {% endfor %}
                 </table>
@@ -45,13 +66,13 @@
                         <td style="text-align: center">#/rof</td>
                         <td style="text-align: center">rly</td>
                     </tr>
-                    <tr>
-                        <td>Some name of weapon</td>
-                        <td style="text-align: center">T</td>
-                        <td style="text-align: center">99</td>
-                        <td style="text-align: center">2d6+99</td>
-                        <td style="text-align: center">99/99</td>
-                        <td style="text-align: center">R</td>
+                    <tr style="text-align: center">
+                        <td style="text-align: left">Some name of weapon</td>
+                        <td>T</td>
+                        <td>99</td>
+                        <td>2d6+99</td>
+                        <td>99/99</td>
+                        <td>R</td>
                     </tr>
                 </table>
                 <table style="font-size: 12px; width: 100%">
@@ -71,17 +92,18 @@
                     <tr>
                         <td colspan="6" style="text-decoration: underline">COMPUTED STATS</td>
                     </tr>
-                    {% for i in range(comp_table[0]['r']) %}
-                        <tr>
-                            {% for j in range(comp_table[0]['c']) %}
-                                <td>
-                                {% for comp_stat in comp_stats if comp_stat['idx'] == i+1 and comp_stat['idy'] == j+1 %}
-                                    {{ comp_stat['stat'] }}    
-                                {% endfor %}
-                                </td>
-                                <td>[99]</td>
-                            {% endfor %}
-                        </tr>
+                    {% for row in comp_stats %}
+                    <tr>
+                        {% for col in row %}
+                            {% if col != None %}
+                                <td>{{ col['stat'] }}</td>
+                                <td id="{{ col['stat'] }}_{{ col['type'] }}_{{ col['multiplier'] }}_value" class="comp_stat">[0]</td>
+                            {% else %}
+                                <td></td>
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
                 </table>
             </td>
@@ -91,28 +113,25 @@
                         <td colspan="6"><span style="text-decoration: underline">ARMOR</span>: names of armor pieces</td>
                     </tr>
                     <tr style="text-align: center">
-                        <td>Head</td>
-                        <td>Torso</td>
-                        <td>R.Arm</td>
-                        <td>L.Arm</td>
-                        <td>R.Leg</td>
-                        <td>L.Leg</td>
+                        {% for body_part in body_parts %}
+                        <td>{{ body_part['body_part'] }}</td>
+                        {% endfor %}
                     </tr>
                     <tr style="text-align: center">
-                        <td>1</td>
-                        <td>2-4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7-8</td>
-                        <td>9-0</td>
+                        {% for body_part in body_parts %}
+                        <td>
+                            {% if body_part['d_from'] != body_part['d_to'] %}
+                                {{ body_part['d_from'] }}-{{ body_part['d_to'] }}
+                            {% else %}
+                                {{ body_part['d_from'] }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
                     </tr>
                     <tr style="text-align: center">
+                        {% for body_part in body_parts %}
                         <td>[99]</td>
-                        <td>[99]</td>
-                        <td>[99]</td>
-                        <td>[99]</td>
-                        <td>[99]</td>
-                        <td>[99]</td>
+                        {% endfor %}
                     </tr>
                 </table>
             </td>
