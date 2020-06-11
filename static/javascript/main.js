@@ -1,54 +1,24 @@
-function updateHitbox(id) {
-    var elem = document.getElementById(id);
-    var sorting = id.split('_');
-    if (id == 'wound_0_1' && elem.style.backgroundColor == 'red' && document.getElementById('wound_0_2').style.backgroundColor == '') {
-        elem.style.backgroundColor = '';
+function updateHitbox(id, w_max, w_min) {
+    var this_elem = document.getElementById(id);
+    var elem = id.split('_');
+    if (elem[2] == 0 && elem[3] == 1 && this_elem.style.backgroundColor == 'red' && document.getElementById(elem[0]+'_wound_'+w_max+'_2').style.backgroundColor == '') {
+        this_elem.style.backgroundColor = '';
+        document.getElementById(elem[0]+'_wound_'+w_max).style.backgroundColor = '';
         return;
     }
-    for (let i=0; i >= Number(sorting[1]); i--) {
-        document.getElementById('wound_'+i).style.backgroundColor = 'red';
-        for (let j=1; j <= 4; j++) {
-            if (i == Number(sorting[1]) && j > Number(sorting[2])) {
-            } else {
-                document.getElementById('wound_'+i+'_'+j).style.backgroundColor = 'red';
-            }
+    for (let i=w_max; i>=w_min; i--) {
+        document.getElementById(elem[0]+'_wound_'+i).style.backgroundColor = '';
+        for (let j=1; j<=4; j++) {
+            document.getElementById(elem[0]+'_wound_'+i+'_'+j).style.backgroundColor = '';
         }
     }
-    for (let i=Number(sorting[1]); i >= -9; i--) {
-        document.getElementById('wound_'+i).style.backgroundColor = '';
+    for (let i=w_max; i >= Number(elem[2]); i--) {
+        document.getElementById(elem[0]+'_wound_'+i).style.backgroundColor = 'red';
         for (let j=1; j <= 4; j++) {
-            if (i == Number(sorting[1]) && j <= Number(sorting[2])) {
+            if (i == Number(elem[2]) && j > Number(elem[3])) {
             } else {
-                document.getElementById('wound_'+i+'_'+j).style.backgroundColor = '';
+                document.getElementById(elem[0]+'_wound_'+i+'_'+j).style.backgroundColor = 'red';
             }
         }
-    }
-}
-
-function updateCompStats() {
-    var comp_stats = document.getElementsByClassName("comp_stat");
-    let i = 0;
-    while (comp_stats[i] != undefined) {
-        var comp_stat = comp_stats[i].id.split("_");
-        var parent = document.getElementById(comp_stat[1]);
-        if (parent != null) {
-            if (comp_stat[0] == 'BTM') {
-                var body_types = document.getElementsByClassName("body_types");
-                let j = 0;
-                while (body_types[j] != undefined) {
-                    var pts_from = body_types[j].getElementsByClassName("bodytype_ptsfrom")[0].innerHTML;
-                    var pts_to = body_types[j].getElementsByClassName("bodytype_ptsto")[0].innerHTML;
-                    if (Number(parent.value) >= Number(pts_from) && Number(parent.value) <= Number(pts_to.replace('None','9999'))) {
-                        var modifier = body_types[j].getElementsByClassName("bodytype_modifier")[0].innerHTML;
-                        document.getElementById(comp_stats[i].id).innerHTML = "["+ modifier +"]";
-                        break;
-                    }
-                    j++;
-                }
-            } else {
-                document.getElementById(comp_stats[i].id).innerHTML = "["+ parseInt(parent.value * comp_stat[2]) +"]";
-            }
-        }
-        i++;
     }
 }

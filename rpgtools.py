@@ -1,5 +1,5 @@
-import sqlite3
-from flask import Flask, render_template, g, json
+import sqlite3, random
+from flask import Flask, render_template, g, request
 
 app = Flask(__name__)
 
@@ -18,19 +18,6 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-def to_table(rowlist, rows, cols):
-    ret = []
-    for i in range(rows):
-        sub = []
-        for j in range(cols):
-            item = list(filter(lambda x: x['idx'] == i+1 and x['idy'] == j+1, rowlist))
-            if item == []:
-                sub.append(None)
-            else:
-                sub.append(item[0])
-        ret.append(sub)
-    return ret
-
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -41,15 +28,86 @@ def close_connection(exception):
 def start():
     return render_template('home.j2')
 
-@app.route('/goongenerator')
-def npcgenerator():
-    stats = query_db('select * from stats where type = "primary" order by idx')
-    comp_stats = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
-    comp_table = query_db('select max(idx) r, max(idy) c from stats where type != "primary" or type is null')
-    body_types = query_db('select * from body_types')
-    body_parts = query_db('select * from body_parts order by idx')
-    wounds = query_db('select * from wounds order by stun_save_mod desc')
-    return render_template('goongenerator.j2', stats=stats, comp_stats=to_table(comp_stats, comp_table[0]['r'], comp_table[0]['c']), body_types=body_types, body_parts=body_parts, wounds=wounds)
+@app.route('/npcgenerator', methods=['GET','POST'])
+def goongenerator():
+    roles = query_db('select * from roles')
+
+    if request.method == 'GET':    
+        return render_template('npcgenerator.j2', roles=roles)
+    
+    if request.method == 'POST':
+        # Get role
+        role = request.form['role_select']
+        if role == 'Random':
+            role = random.choice(roles)[0]
+        
+        # Generate primary stats
+        stat_db = query_db('select * from stats where type = "primary" order by idx')
+        stat_vals = {}
+        for stat in stat_db:
+            d6_1 = random.randint(1,6)
+            d6_2 = random.randint(1,6)
+            while d6_1 + d6_2 >= 11:
+                d6_1 = random.randint(1,6)
+                d6_2 = random.randint(1,6)
+            stat_vals[stat[0]] = d6_1+d6_2
+        stat_sum = sum(stat_vals.values())
+
+        # Generate skills
+        skill_db = query_db(f'select cs.role_id, cs.skill_id, s.stat_id from career_skills cs join skills s on s.skill = cs.skill_id where role_id="{role}"')
+        skill_vals = {}
+        for skill in skill_db:
+            skill_vals[skill['skill_id']] = random.randint(1,100)
+        s = sum(skill_vals.values())
+        for k, v in skill_vals.items():
+            skill_vals[k] = round(v / s * 40)
+        
+        print(skill_vals)
+
+        for skill in skill_db:
+            skill_vals[skill['skill_id']] = [skill_vals[skill['skill_id']], skill['stat_id']]
+
+        # Generate computed stats
+        cstat_db = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
+        cstat_rows = max([cstat['idx'] for cstat in cstat_db])
+        cstat_cols = max([cstat['idy'] for cstat in cstat_db])
+        cstat_vals = []
+        for i in range(cstat_rows):
+            sub = []
+            for j in range(cstat_cols):
+                item = list(filter(lambda x: x['idx'] == i+1 and x['idy'] == j+1, cstat_db))
+                if item == []:
+                    sub.append(None)
+                else:
+                    if item[0]['type'] != None and item[0]['multiplier'] != None:
+                        sub.append([item[0]['stat'], item[0]['multiplier'] * stat_vals[item[0]['type']]])
+                    elif item[0]['stat'] == 'BTM':
+                        body_type = query_db(f'select * from body_types where pts_from <= {stat_vals["BODY"]} and coalesce(pts_to,"9999") >= {stat_vals["BODY"]}')[0]
+                        sub.append([item[0]['stat'], body_type['modifier']])
+                    else:
+                        sub.append([item[0]['stat'], 0])
+            cstat_vals.append(sub)
+
+        # Body parts
+        bodyparts = query_db('select * from body_parts order by idx')
+
+        # Wounds
+        wounds = query_db('select * from wounds order by stun_save_mod desc')
+        wounds_max = max([x[2] for x in wounds])
+        wounds_min = min([x[2] for x in wounds])
+
+        npc_sheets = {
+            1: {'role': role, 'stat_vals': stat_vals, 'stat_sum': stat_sum, 'skill_vals': skill_vals, 'cstat_vals': cstat_vals}
+        }
+
+        return render_template('npcgenerator.j2', 
+            roles=roles,
+            bodyparts=bodyparts,
+            wounds=wounds,
+            wounds_max=wounds_max,
+            wounds_min=wounds_min,
+            npc_sheets=npc_sheets
+        )
 
 if __name__ == '__main__':
     app.run( debug = True)
