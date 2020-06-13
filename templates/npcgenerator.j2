@@ -36,12 +36,15 @@
             <td colspan="14">
                 <table>
                     <tr>
-                        <td colspan="2" class="npc_section_header">SKILLS</td>
+                        <td colspan="3" class="npc_section_header">SKILLS</td>
                     </tr>
                     {% for skill in npc_sheets[npc]['skill_vals'] %}
                     <tr>
                         <td>{{ skill }}</td>
                         <td>[{{ npc_sheets[npc]['skill_vals'][skill][0] }}]</td>
+                        {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
+                        <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </table>
@@ -51,18 +54,18 @@
                     <tr>
                         <td class="npc_section_header">WEAPONS</td>
                         <td style="text-align: center">type</td>
-                        <td style="text-align: center">skl</td>
+                        <td style="text-align: center">acc</td>
                         <td style="text-align: center">dmg</td>
                         <td style="text-align: center">#/rof</td>
                         <td style="text-align: center">rel</td>
                     </tr>
                     <tr style="text-align: center">
-                        <td style="text-align: left">Some name of weapon</td>
-                        <td>T</td>
-                        <td>99</td>
-                        <td>2d6+99</td>
-                        <td>99/99</td>
-                        <td>R</td>
+                        <td style="text-align: left">{{ npc_sheets[npc]['weapon_vals']['name'] }}</td>
+                        <td>{{ npc_sheets[npc]['weapon_vals']['type'] }}</td>
+                        <td>{{ npc_sheets[npc]['weapon_vals']['accuracy'] }}</td>
+                        <td>{{ npc_sheets[npc]['weapon_vals']['damage'] }}</td>
+                        <td>{{ npc_sheets[npc]['weapon_vals']['shots'] }}/{{ npc_sheets[npc]['weapon_vals']['rof'] }}</td>
+                        <td>{{ npc_sheets[npc]['weapon_vals']['reliability'] }}</td>
                     </tr>
                 </table>
                 <table>
@@ -99,7 +102,7 @@
             <td colspan="20">
                 <table>
                     <tr>
-                        <td colspan="6"><span class="npc_section_header">ARMOR</span>: names of armor pieces</td>
+                        <td colspan="6"><span class="npc_section_header">ARMOR</span>: {{ npc_sheets[npc]['armor_vals']['material'] }} {{ npc_sheets[npc]['armor_vals']['type'] }}</td>
                     </tr>
                     <tr style="text-align: center">
                         {% for body_part in bodyparts %}
@@ -118,9 +121,12 @@
                         {% endfor %}
                     </tr>
                     <tr style="text-align: center">
-                        {% for body_part in bodyparts %}
-                        <td>[99]</td>
-                        {% endfor %}
+                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_head'] }}]</td>
+                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_torso'] }}]</td>
+                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_larm'] }}]</td>
+                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_rarm'] }}]</td>
+                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_lleg'] }}]</td>
+                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_rleg'] }}]</td>
                     </tr>
                 </table>
             </td>

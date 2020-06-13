@@ -1,4 +1,4 @@
-import sqlite3, random
+import sqlite3, random, math
 from flask import Flask, render_template, g, request
 
 app = Flask(__name__)
@@ -60,12 +60,21 @@ def goongenerator():
             skill_vals[skill['skill_id']] = random.randint(1,100)
         s = sum(skill_vals.values())
         for k, v in skill_vals.items():
-            skill_vals[k] = round(v / s * 40)
-        
-        print(skill_vals)
-
+            skill_vals[k] = math.ceil(v / s * 40)
         for skill in skill_db:
             skill_vals[skill['skill_id']] = [skill_vals[skill['skill_id']], skill['stat_id']]
+
+        # Generate Weapons
+        weapon_pts = random.randint(1,10)
+        weapon_roll_db = query_db(f'select weapon_type, weapon_subtype from npc_weapon_roll where pts_from <= {weapon_pts} and coalesce(pts_to,99) >= {weapon_pts}')[0]
+        weapon_db = query_db(f'select * from weapons where type="{weapon_roll_db["weapon_type"]}" and subtype="{weapon_roll_db["weapon_subtype"]}"')
+        weapon_vals = random.choice(weapon_db)
+
+        # Generate Armor
+        armor_pts = random.randint(1,10)
+        armor_roll_db = query_db(f'select material from npc_armor_roll where pts_from <= {armor_pts} and coalesce(pts_to,99) >= {armor_pts}')[0]
+        armor_db = query_db(f'select * from armor where material="{armor_roll_db["material"]}"')
+        armor_vals = random.choice(armor_db)
 
         # Generate computed stats
         cstat_db = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
@@ -97,7 +106,7 @@ def goongenerator():
         wounds_min = min([x[2] for x in wounds])
 
         npc_sheets = {
-            1: {'role': role, 'stat_vals': stat_vals, 'stat_sum': stat_sum, 'skill_vals': skill_vals, 'cstat_vals': cstat_vals}
+            1: {'role': role, 'stat_vals': stat_vals, 'stat_sum': stat_sum, 'skill_vals': skill_vals, 'weapon_vals': weapon_vals, 'armor_vals': armor_vals, 'cstat_vals': cstat_vals}
         }
 
         return render_template('npcgenerator.j2', 
