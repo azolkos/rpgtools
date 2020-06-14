@@ -29,7 +29,7 @@ def start():
     return render_template('home.j2')
 
 @app.route('/npcgenerator', methods=['GET','POST'])
-def goongenerator():
+def npcgenerator():
     roles = query_db('select * from roles')
 
     if request.method == 'GET':    
