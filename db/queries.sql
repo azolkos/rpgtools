@@ -45,6 +45,14 @@ insert into stats (stat,idx,idy,type,multiplier) values ('LIFT',3,1,'BODY',40);
 insert into stats (stat,idx,idy,type,multiplier) values ('HUMANITY',3,2,'EMP',10);
 insert into stats (stat,idx,idy,type,multiplier) values ('BTM',3,3,'BODY',null);
 
+create table npc_stats_roll (
+    role_id text,
+    stat_id text,
+    lvl number,
+    pts_from number,
+    pts_to number
+);
+
 create table body_types (
     body_type text not null primary key,
     pts_from number not null,
@@ -512,6 +520,7 @@ insert into npc_armor_roll (pts_from, pts_to, material) values (8,9,'Heavy Kevla
 insert into npc_armor_roll (pts_from, pts_to, material) values (10,null,'MetalGear');
 
 
+select * from main.sqlite_master where type = 'table';
 
 
 
