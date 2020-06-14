@@ -45,6 +45,7 @@ insert into stats (stat,idx,idy,type,multiplier) values ('LIFT',3,1,'BODY',40);
 insert into stats (stat,idx,idy,type,multiplier) values ('HUMANITY',3,2,'EMP',10);
 insert into stats (stat,idx,idy,type,multiplier) values ('BTM',3,3,'BODY',null);
 
+-- Tu trzeba jakies inserty zrobić
 create table npc_stats_roll (
     role_id text,
     stat_id text,
