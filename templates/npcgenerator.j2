@@ -10,140 +10,141 @@
             {% endfor %}
         </select>
         <button class="w3-button w3-black" type="submit">POST</button>
+    
+        {# NPC character sheets #}
+        {% for npc in npc_sheets %}
+        <table id="npc_{{ npc }}" class="npc_sheet">
+            <tr>
+                <td colspan="12"><input type="text" style='width: 100%' placeholder="Handle"></td>
+                <td colspan="12"><input name="{{ npc }}_role" type="hidden" value="{{ npc_sheets[npc]['role'] }}">{{ npc_sheets[npc]['role'] }}</input></td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table>
+                        <tr>
+                            <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ npc_sheets[npc]['stat_sum'] }})</td>
+                        </tr>
+                        {% for stat in npc_sheets[npc]['stat_vals'] %}
+                        <tr>
+                            <td>{{ stat }}</td>
+                            <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['stat_vals'][stat] }}" value="{{ npc_sheets[npc]['stat_vals'][stat] }}"></input>]</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+                <td colspan="14">
+                    <table>
+                        <tr>
+                            <td colspan="3" class="npc_section_header">SKILLS</td>
+                        </tr>
+                        {% for skill in npc_sheets[npc]['skill_vals'] %}
+                        <tr>
+                            <td>{{ skill }}</td>
+                            <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" value="{{ npc_sheets[npc]['skill_vals'][skill][0] }}"></input>]</td>
+                            {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
+                            <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+                <td colspan="20">
+                    <table>
+                        <tr>
+                            <td class="npc_section_header">WEAPONS</td>
+                            <td style="text-align: center">type</td>
+                            <td style="text-align: center">acc</td>
+                            <td style="text-align: center">dmg</td>
+                            <td style="text-align: center">#/rof</td>
+                            <td style="text-align: center">rel</td>
+                        </tr>
+                        <tr style="text-align: center">
+                            <td style="text-align: left">{{ npc_sheets[npc]['weapon_vals']['name'] }}</td>
+                            <td>{{ npc_sheets[npc]['weapon_vals']['type'] }}</td>
+                            <td>{{ npc_sheets[npc]['weapon_vals']['accuracy'] }}</td>
+                            <td>{{ npc_sheets[npc]['weapon_vals']['damage'] }}</td>
+                            <td>{{ npc_sheets[npc]['weapon_vals']['shots'] }}/{{ npc_sheets[npc]['weapon_vals']['rof'] }}</td>
+                            <td>{{ npc_sheets[npc]['weapon_vals']['reliability'] }}</td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td class="npc_section_header">CYBERWARE</td>
+                        </tr>
+                        <tr>
+                            <td>Some name of cyberware</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="20">
+                    <table>
+                        <tr>
+                            <td colspan="6" class="npc_section_header">COMPUTED STATS</td>
+                        </tr>
+                        {% for row in npc_sheets[npc]['cstat_vals'] %}
+                        <tr>
+                            {% for col in row %}
+                                {% if col != None %}
+                                    <td>{{ col[0] }}</td>
+                                    <td>[{{ col[1] }}]</td>
+                                {% else %}
+                                    <td></td>
+                                    <td></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+                <td colspan="20">
+                    <table>
+                        <tr>
+                            <td colspan="6"><span class="npc_section_header">ARMOR</span>: {{ npc_sheets[npc]['armor_vals']['material'] }} {{ npc_sheets[npc]['armor_vals']['type'] }}</td>
+                        </tr>
+                        <tr style="text-align: center">
+                            {% for body_part in bodyparts %}
+                            <td>{{ body_part['body_part'] }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr style="text-align: center">
+                            {% for body_part in bodyparts %}
+                            <td>
+                                {% if body_part['d_from'] != body_part['d_to'] %}
+                                    {{ body_part['d_from'] }}-{{ body_part['d_to'] }}
+                                {% else %}
+                                    {{ body_part['d_from'] }}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        <tr style="text-align: center">
+                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_head'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_torso'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_larm'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_rarm'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_lleg'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_rleg'] }}]</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                {% for wound in wounds %}
+                <td colspan="4" id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}" class="wound_type">{{ wound['abr'] }} {{ wound['stun_save_mod'] }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for wound in wounds %}
+                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_1" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_2" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_3" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_4" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                {% endfor %}
+            </tr>
+        </table>
+        {% endfor %}
     </form>
 
-    {# NPC character sheets #}
-    {% for npc in npc_sheets %}
-    <table id="npc_{{ npc }}" class="npc_sheet">
-        <tr>
-            <td colspan="12"><input type="text" style='width: 100%' placeholder="Handle"></td>
-            <td colspan="12">{{ npc_sheets[npc]['role'] }}</td>
-        </tr>
-        <tr>
-            <td colspan="6">
-                <table>
-                    <tr>
-                        <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ npc_sheets[npc]['stat_sum'] }})</td>
-                    </tr>
-                    {% for stat in npc_sheets[npc]['stat_vals'] %}
-                    <tr>
-                        <td>{{ stat }}</td>
-                        <td>[{{ npc_sheets[npc]['stat_vals'][stat] }}]</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </td>
-            <td colspan="14">
-                <table>
-                    <tr>
-                        <td colspan="3" class="npc_section_header">SKILLS</td>
-                    </tr>
-                    {% for skill in npc_sheets[npc]['skill_vals'] %}
-                    <tr>
-                        <td>{{ skill }}</td>
-                        <td>[{{ npc_sheets[npc]['skill_vals'][skill][0] }}]</td>
-                        {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
-                        <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </table>
-            </td>
-            <td colspan="20">
-                <table>
-                    <tr>
-                        <td class="npc_section_header">WEAPONS</td>
-                        <td style="text-align: center">type</td>
-                        <td style="text-align: center">acc</td>
-                        <td style="text-align: center">dmg</td>
-                        <td style="text-align: center">#/rof</td>
-                        <td style="text-align: center">rel</td>
-                    </tr>
-                    <tr style="text-align: center">
-                        <td style="text-align: left">{{ npc_sheets[npc]['weapon_vals']['name'] }}</td>
-                        <td>{{ npc_sheets[npc]['weapon_vals']['type'] }}</td>
-                        <td>{{ npc_sheets[npc]['weapon_vals']['accuracy'] }}</td>
-                        <td>{{ npc_sheets[npc]['weapon_vals']['damage'] }}</td>
-                        <td>{{ npc_sheets[npc]['weapon_vals']['shots'] }}/{{ npc_sheets[npc]['weapon_vals']['rof'] }}</td>
-                        <td>{{ npc_sheets[npc]['weapon_vals']['reliability'] }}</td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <td class="npc_section_header">CYBERWARE</td>
-                    </tr>
-                    <tr>
-                        <td>Some name of cyberware</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="20">
-                <table>
-                    <tr>
-                        <td colspan="6" class="npc_section_header">COMPUTED STATS</td>
-                    </tr>
-                    {% for row in npc_sheets[npc]['cstat_vals'] %}
-                    <tr>
-                        {% for col in row %}
-                            {% if col != None %}
-                                <td>{{ col[0] }}</td>
-                                <td>[{{ col[1] }}]</td>
-                            {% else %}
-                                <td></td>
-                                <td></td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </table>
-            </td>
-            <td colspan="20">
-                <table>
-                    <tr>
-                        <td colspan="6"><span class="npc_section_header">ARMOR</span>: {{ npc_sheets[npc]['armor_vals']['material'] }} {{ npc_sheets[npc]['armor_vals']['type'] }}</td>
-                    </tr>
-                    <tr style="text-align: center">
-                        {% for body_part in bodyparts %}
-                        <td>{{ body_part['body_part'] }}</td>
-                        {% endfor %}
-                    </tr>
-                    <tr style="text-align: center">
-                        {% for body_part in bodyparts %}
-                        <td>
-                            {% if body_part['d_from'] != body_part['d_to'] %}
-                                {{ body_part['d_from'] }}-{{ body_part['d_to'] }}
-                            {% else %}
-                                {{ body_part['d_from'] }}
-                            {% endif %}
-                        </td>
-                        {% endfor %}
-                    </tr>
-                    <tr style="text-align: center">
-                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_head'] }}]</td>
-                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_torso'] }}]</td>
-                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_larm'] }}]</td>
-                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_rarm'] }}]</td>
-                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_lleg'] }}]</td>
-                        <td>[{{ npc_sheets[npc]['armor_vals']['sp_rleg'] }}]</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            {% for wound in wounds %}
-            <td colspan="4" id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}" class="wound_type">{{ wound['abr'] }} {{ wound['stun_save_mod'] }}</td>
-            {% endfor %}
-        </tr>
-        <tr>
-            {% for wound in wounds %}
-            <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_1" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-            <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_2" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-            <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_3" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-            <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_4" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-            {% endfor %}
-        </tr>
-    </table>
-    {% endfor %}
 {% endblock %}

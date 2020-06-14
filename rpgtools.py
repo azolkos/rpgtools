@@ -32,15 +32,25 @@ def start():
 def npcgenerator():
     roles = query_db('select * from roles')
 
-    if request.method == 'GET':    
+    if request.method == 'GET':
         return render_template('npcgenerator.j2', roles=roles)
-    
+
     if request.method == 'POST':
+
+        # Get current npc sheets
+        try:
+            keys = [x.split('_') for x in request.form.keys()]
+            for item in keys:
+                # tutaj mamy dostep do wszystkich danych z kart postaci juz wygenerowanych oraz modyfikacje uzytkownika
+                print(item,request.form['_'.join(item)])
+        except:
+            pass
+
         # Get role
         role = request.form['role_select']
         if role == 'Random':
             role = random.choice(roles)[0]
-        
+
         # Generate primary stats
         stat_db = query_db('select * from stats where type = "primary" order by idx')
         stat_vals = {}
@@ -109,7 +119,7 @@ def npcgenerator():
             1: {'role': role, 'stat_vals': stat_vals, 'stat_sum': stat_sum, 'skill_vals': skill_vals, 'weapon_vals': weapon_vals, 'armor_vals': armor_vals, 'cstat_vals': cstat_vals}
         }
 
-        return render_template('npcgenerator.j2', 
+        return render_template('npcgenerator.j2',
             roles=roles,
             bodyparts=bodyparts,
             wounds=wounds,
