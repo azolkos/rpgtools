@@ -75,10 +75,11 @@ def npcgenerator():
             skill_vals[skill['skill_id']] = [skill_vals[skill['skill_id']], skill['stat_id']]
 
         # Generate Weapons
-        weapon_pts = random.randint(1,10)
-        weapon_roll_db = query_db(f'select weapon_type, weapon_subtype from npc_weapon_roll where pts_from <= {weapon_pts} and coalesce(pts_to,99) >= {weapon_pts}')[0]
-        weapon_db = query_db(f'select * from weapons where type="{weapon_roll_db["weapon_type"]}" and subtype="{weapon_roll_db["weapon_subtype"]}"')
-        weapon_vals = random.choice(weapon_db)
+        # weapon_pts = random.randint(1,10)
+        # weapon_roll_db = query_db(f'select weapon_type, weapon_subtype from npc_weapon_roll where pts_from <= {weapon_pts} and coalesce(pts_to,99) >= {weapon_pts}')[0]
+        # weapon_db = query_db(f'select * from weapons where type="{weapon_roll_db["weapon_type"]}" and subtype="{weapon_roll_db["weapon_subtype"]}"')
+        weapon_db = query_db(f'select * from weapons')
+        weapon_vals = random.choices(weapon_db, k=2)
 
         # Generate Armor
         armor_pts = random.randint(1,10)
@@ -107,6 +108,17 @@ def npcgenerator():
                         sub.append([item[0]['stat'], 0])
             cstat_vals.append(sub)
 
+        # Weapons
+        weapons = query_db('''
+            select wcs.idx, wcs.cat, w.name
+            from weapons w 
+            join weapon_types wt on wt.id = w.type 
+            left join weapon_subtypes ws on ws.id = w.subtype
+            join weapon_cat_sort wcs on wcs.cat = coalesce(ws.name || ' ', '') || wt.name || 's'
+            order by wcs.idx
+        ''')
+        weapons_cat = query_db('select * from weapon_cat_sort order by idx')    
+
         # Body parts
         bodyparts = query_db('select * from body_parts order by idx')
 
@@ -121,6 +133,8 @@ def npcgenerator():
 
         return render_template('npcgenerator.j2',
             roles=roles,
+            weapons=weapons,
+            weapons_cat=weapons_cat,
             bodyparts=bodyparts,
             wounds=wounds,
             wounds_max=wounds_max,

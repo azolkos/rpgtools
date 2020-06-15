@@ -360,6 +360,16 @@ insert into weapon_reliability (id, name) values ('VR','Very Reliable');
 insert into weapon_reliability (id, name) values ('ST','Standard');
 insert into weapon_reliability (id, name) values ('UR','Unreliable');
 
+create table weapon_subtypes (
+    id text not null primary key,
+    name text
+);
+
+insert into weapon_subtypes (id, name) values ('L','Light');
+insert into weapon_subtypes (id, name) values ('M','Medium');
+insert into weapon_subtypes (id, name) values ('H','Heavy');
+insert into weapon_subtypes (id, name) values ('VH','Very Heavy');
+
 create table weapons (
     name text not null primary key,
     type text,
@@ -521,7 +531,34 @@ insert into npc_armor_roll (pts_from, pts_to, material) values (8,9,'Heavy Kevla
 insert into npc_armor_roll (pts_from, pts_to, material) values (10,null,'MetalGear');
 
 
-select * from main.sqlite_master where type = 'table';
+create view weapon_cat_sort as
+    select 'Light Pistols' cat, 1 idx union all
+    select 'Medium Pistols' cat, 2 idx union all
+    select 'Heavy Pistols' cat, 3 idx union all
+    select 'Very Heavy Pistols' cat, 4 idx union all
+    select 'Light Submachineguns' cat, 5 idx union all
+    select 'Medium Submachineguns' cat, 6 idx union all
+    select 'Heavy Submachineguns' cat, 7 idx union all
+    select 'Shotguns' cat, 8 idx union all
+    select 'Light Rifles' cat, 9 idx union all
+    select 'Medium Rifles' cat, 10 idx union all
+    select 'Heavy Rifles' cat, 11 idx union all
+    select 'Heavy Weapons' cat, 12 idx union all
+    select 'Light Melee Weapons' cat, 13 idx union all
+    select 'Melee Weapons' cat, 14 idx union all
+    select 'Exotic Weapons' cat, 15 idx union all
+    select 'Pistols' cat, 16 idx union all
+    select 'Submachineguns' cat, 17 idx union all
+    select 'Rifles' cat, 18 idx
+;
+
+
+select wcs.idx, wcs.cat, w.name
+from weapons w 
+join weapon_types wt on wt.id = w.type 
+left join weapon_subtypes ws on ws.id = w.subtype
+join weapon_cat_sort wcs on wcs.cat = coalesce(ws.name || ' ', '') || wt.name || 's'
+order by wcs.idx
 
 
 

@@ -45,3 +45,17 @@ input[type=number] {
     height: 12px;
     width: 2ch
 }
+
+.skill_list_col {
+    width: 150px;
+}
+
+.row_op {
+    cursor: default;
+    text-align: center;
+}
+
+.row_op:hover {
+    background-color: black;
+    color: white;
+}

@@ -39,7 +39,7 @@
                         </tr>
                         {% for skill in npc_sheets[npc]['skill_vals'] %}
                         <tr>
-                            <td>{{ skill }}</td>
+                            <td class="skill_list_col">{{ skill }}</td>
                             <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" value="{{ npc_sheets[npc]['skill_vals'][skill][0] }}"></input>]</td>
                             {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
                             <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
@@ -49,7 +49,7 @@
                     </table>
                 </td>
                 <td colspan="20">
-                    <table>
+                    <table id="weapons_table">
                         <tr>
                             <td class="npc_section_header">WEAPONS</td>
                             <td style="text-align: center">type</td>
@@ -58,13 +58,34 @@
                             <td style="text-align: center">#/rof</td>
                             <td style="text-align: center">rel</td>
                         </tr>
-                        <tr style="text-align: center">
-                            <td style="text-align: left">{{ npc_sheets[npc]['weapon_vals']['name'] }}</td>
-                            <td>{{ npc_sheets[npc]['weapon_vals']['type'] }}</td>
-                            <td>{{ npc_sheets[npc]['weapon_vals']['accuracy'] }}</td>
-                            <td>{{ npc_sheets[npc]['weapon_vals']['damage'] }}</td>
-                            <td>{{ npc_sheets[npc]['weapon_vals']['shots'] }}/{{ npc_sheets[npc]['weapon_vals']['rof'] }}</td>
-                            <td>{{ npc_sheets[npc]['weapon_vals']['reliability'] }}</td>
+                        {% for weapon in npc_sheets[npc]['weapon_vals'] %}
+                        <tr id="{{ npc }}_weapon_{{ weapon['name'] }}" style="text-align: center">
+                            <td style="text-align: left"><input name="{{ npc }}_weapon_{{ weapon['name'] }}" type="hidden" value="{{ weapon['name'] }}">{{ weapon['name'] }}</input></td>
+                            <td>{{ weapon['type'] }}</td>
+                            <td>{{ weapon['accuracy'] }}</td>
+                            <td>{{ weapon['damage'] }}</td>
+                            <td>{{ weapon['shots'] }}/{{ weapon['rof'] }}</td>
+                            <td>{{ weapon['reliability'] }}</td>
+                            <td class="row_op" onClick="remove_weapon('{{ npc }}_weapon_{{ weapon['name'] }}')">-</td>
+                        </tr>
+                        {% endfor %}
+                        <tr id="{{ npc }}_weaponselect_1" style="display: none">
+                            <td>
+                                <select name="{{ npc }}_weapon_1">
+                                    {% for cat in weapons_cat %}
+                                        <optgroup label="{{ cat['cat'] }}">
+                                            {% for weapon in weapons if weapon['cat'] == cat['cat'] %}
+                                                <option value="{{ weapon['name'] }}">{{ weapon['name'] }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td class="row_op" onClick="add_weapon_select({{ npc }})">+</td>
                         </tr>
                     </table>
                     <table>

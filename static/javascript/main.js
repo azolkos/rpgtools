@@ -22,3 +22,29 @@ function updateHitbox(id, w_max, w_min) {
         }
     }
 }
+
+function add_weapon_select(npc){
+    var sel = document.getElementById(npc+'_weaponselect_1')
+    if (sel.style.display == 'none') {
+        sel.style.display = 'block';
+    } else {
+        var t = document.getElementById('weapons_table');
+        var r = t.insertRow();
+        var c = r.insertCell();
+        for (let i=1;;i++) {
+            var idx = Number(sel.getElementsByTagName('select')[0].name.split('_')[2]) + i;
+            var new_sel = document.getElementsByName(npc+'_weapon_'+idx)[0];
+            if (new_sel) {
+            } else {
+                r.id = npc+'_weaponselect_'+idx;
+                c.innerHTML = sel.innerHTML;
+                c.getElementsByTagName('select')[0].name = npc+'_weapon_'+idx;
+                break;
+            }
+        }
+    }
+}
+
+function remove_weapon(id){
+    document.getElementById(id).remove();
+}
