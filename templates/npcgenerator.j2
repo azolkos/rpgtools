@@ -10,12 +10,13 @@
             {% endfor %}
         </select>
         <button class="w3-button w3-black" type="submit">POST</button>
+        <input name="update" class="w3-button w3-black w3-right" type="submit" value="update"></input>
     
         {# NPC character sheets #}
         {% for npc in npc_sheets %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
-                <td colspan="12"><input type="text" style='width: 100%' placeholder="Handle"></td>
+                <td colspan="12"><input type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle"></td>
                 <td colspan="12"><input name="{{ npc }}_role" type="hidden" value="{{ npc_sheets[npc]['role'] }}">{{ npc_sheets[npc]['role'] }}</input></td>
             </tr>
             <tr>

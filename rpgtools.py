@@ -46,6 +46,9 @@ def npcgenerator():
         except:
             pass
 
+        if 'update' in list(request.form.keys()):
+            print('updating')
+
         # Get role
         role = request.form['role_select']
         if role == 'Random':
