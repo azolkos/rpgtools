@@ -18,6 +18,65 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+def update_npcs(keys, form):
+    npc_sheets = {}
+    npc_ids = list(set([int(x[0]) for x in keys if x[0] != '0']))
+
+    for npc in npc_ids:
+        role = form[f'{npc}_role']
+
+        stat_vals = {}
+        for stat in [x for x in keys if int(x[0]) == npc and x[1] == 'stats']:
+            stat_vals[stat[2]] = int(form['_'.join(stat)])
+        stat_sum = sum([int(x) for x in stat_vals.values()])
+
+        skill_vals = {}
+        for skill in [x for x in keys if int(x[0]) == npc and x[1] == 'skills']:
+            skill_stat = query_db(f'select stat_id from skills where skill="{skill[2]}"')[0]
+            skill_vals[skill[2]] = [form['_'.join(skill)], skill_stat[0]]
+
+        weapon_vals = []
+        for weapon in [x for x in keys if int(x[0]) == npc and x[1] == 'weapon']:
+            w = form['_'.join(weapon)]
+            w_db = query_db(f'select * from weapons where name="{w}"')
+            for r in w_db:
+                if r != []:
+                    weapon_vals.append(r)
+
+        armor_vals_1 = query_db(f'select * from armor where material || " " || type="{form[str(npc)+"_armor_helmet"]}"')
+        armor_vals_2 = query_db(f'select * from armor where material || " " || type="{form[str(npc)+"_armor_jacket"]}"')
+        armor_vals_3 = query_db(f'select * from armor where material || " " || type="{form[str(npc)+"_armor_vest"]}"')
+        armor_vals_4 = query_db(f'select * from armor where material || " " || type="{form[str(npc)+"_armor_pants"]}"')
+        armor_vals_1 = armor_vals_1[0] if armor_vals_1 != [] else {'material': None, 'type': None}
+        armor_vals_2 = armor_vals_2[0] if armor_vals_2 != [] else {'material': None, 'type': None}
+        armor_vals_3 = armor_vals_3[0] if armor_vals_3 != [] else {'material': None, 'type': None}
+        armor_vals_4 = armor_vals_4[0] if armor_vals_4 != [] else {'material': None, 'type': None}
+        
+        armor_sp = query_db(f'''
+            select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
+            from armor
+            where material || ' ' || type in (
+                '{armor_vals_1['material']} {armor_vals_1['type']}',
+                '{armor_vals_2['material']} {armor_vals_2['type']}',
+                '{armor_vals_3['material']} {armor_vals_3['type']}',
+                '{armor_vals_4['material']} {armor_vals_4['type']}'
+            )
+        ''')[0]
+
+        cstat_vals = compute_stats(stat_vals)
+
+        npc_sheets[npc] = {
+                'role': role,
+                'stat_vals': stat_vals,
+                'stat_sum': stat_sum,
+                'skill_vals': skill_vals,
+                'weapon_vals': weapon_vals,
+                'armor_vals': [armor_vals_1,armor_vals_2,armor_vals_3,armor_vals_4],
+                'armor_sp': armor_sp,
+                'cstat_vals': cstat_vals
+        }
+    return npc_sheets
+
 def compute_stats(stat_vals):
     cstat_db = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
     cstat_rows = max([cstat['idx'] for cstat in cstat_db])
@@ -59,8 +118,6 @@ def npcgenerator():
 
     if request.method == 'POST':
 
-        npc_sheets = {}
-
         # Get current npc sheets
         keys = [x.split('_') for x in request.form.keys()]
             # for item in keys:
@@ -68,121 +125,9 @@ def npcgenerator():
                 # print(item,request.form['_'.join(item)])
         npc_id = int(max([x[0] for x in keys])) + 1
 
-        if '0_update' in list(request.form.keys()):
+        npc_sheets = update_npcs(keys, request.form)
 
-            npc_ids = list(set([int(x[0]) for x in keys if x[0] != '0']))
-
-            for npc in npc_ids:
-                role = request.form[f'{npc}_role']
-
-                stat_vals = {}
-                for stat in [x for x in keys if int(x[0]) == npc and x[1] == 'stats']:
-                    stat_vals[stat[2]] = int(request.form['_'.join(stat)])
-                stat_sum = sum([int(x) for x in stat_vals.values()])
-
-                skill_vals = {}
-                for skill in [x for x in keys if int(x[0]) == npc and x[1] == 'skills']:
-                    skill_stat = query_db(f'select stat_id from skills where skill="{skill[2]}"')[0]
-                    skill_vals[skill[2]] = [request.form['_'.join(skill)], skill_stat[0]]
-
-                weapon_vals = []
-                for weapon in [x for x in keys if int(x[0]) == npc and x[1] == 'weapon']:
-                    w = request.form['_'.join(weapon)]
-                    w_db = query_db(f'select * from weapons where name="{w}"')
-                    for r in w_db:
-                        if r != []:
-                            weapon_vals.append(r)
-
-                armor_vals_1 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_helmet"]}"')
-                armor_vals_2 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_jacket"]}"')
-                armor_vals_3 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_vest"]}"')
-                armor_vals_4 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_pants"]}"')
-                armor_vals_1 = armor_vals_1[0] if armor_vals_1 != [] else {'material': None, 'type': None}
-                armor_vals_2 = armor_vals_2[0] if armor_vals_2 != [] else {'material': None, 'type': None}
-                armor_vals_3 = armor_vals_3[0] if armor_vals_3 != [] else {'material': None, 'type': None}
-                armor_vals_4 = armor_vals_4[0] if armor_vals_4 != [] else {'material': None, 'type': None}
-                
-                armor_sp = query_db(f'''
-                    select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
-                    from armor
-                    where material || ' ' || type in (
-                        '{armor_vals_1['material']} {armor_vals_1['type']}',
-                        '{armor_vals_2['material']} {armor_vals_2['type']}',
-                        '{armor_vals_3['material']} {armor_vals_3['type']}',
-                        '{armor_vals_4['material']} {armor_vals_4['type']}'
-                    )
-                ''')[0]
-
-                cstat_vals = compute_stats(stat_vals)
-
-                npc_sheets[npc] = {
-                        'role': role,
-                        'stat_vals': stat_vals,
-                        'stat_sum': stat_sum,
-                        'skill_vals': skill_vals,
-                        'weapon_vals': weapon_vals,
-                        'armor_vals': [armor_vals_1,armor_vals_2,armor_vals_3,armor_vals_4],
-                        'armor_sp': armor_sp,
-                        'cstat_vals': cstat_vals
-                }
-
-        else:
-
-            npc_ids = list(set([int(x[0]) for x in keys if x[0] != '0']))
-
-            for npc in npc_ids:
-                role = request.form[f'{npc}_role']
-
-                stat_vals = {}
-                for stat in [x for x in keys if int(x[0]) == npc and x[1] == 'stats']:
-                    stat_vals[stat[2]] = int(request.form['_'.join(stat)])
-                stat_sum = sum([int(x) for x in stat_vals.values()])
-
-                skill_vals = {}
-                for skill in [x for x in keys if int(x[0]) == npc and x[1] == 'skills']:
-                    skill_stat = query_db(f'select stat_id from skills where skill="{skill[2]}"')[0]
-                    skill_vals[skill[2]] = [request.form['_'.join(skill)], skill_stat[0]]
-
-                weapon_vals = []
-                for weapon in [x for x in keys if int(x[0]) == npc and x[1] == 'weapon']:
-                    w = request.form['_'.join(weapon)]
-                    w_db = query_db(f'select * from weapons where name="{w}"')
-                    for r in w_db:
-                        if r != []:
-                            weapon_vals.append(r)
-
-                armor_vals_1 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_helmet"]}"')
-                armor_vals_2 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_jacket"]}"')
-                armor_vals_3 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_vest"]}"')
-                armor_vals_4 = query_db(f'select * from armor where material || " " || type="{request.form[str(npc)+"_armor_pants"]}"')
-                armor_vals_1 = armor_vals_1[0] if armor_vals_1 != [] else {'material': None, 'type': None}
-                armor_vals_2 = armor_vals_2[0] if armor_vals_2 != [] else {'material': None, 'type': None}
-                armor_vals_3 = armor_vals_3[0] if armor_vals_3 != [] else {'material': None, 'type': None}
-                armor_vals_4 = armor_vals_4[0] if armor_vals_4 != [] else {'material': None, 'type': None}
-                
-                armor_sp = query_db(f'''
-                    select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
-                    from armor
-                    where material || ' ' || type in (
-                        '{armor_vals_1['material']} {armor_vals_1['type']}',
-                        '{armor_vals_2['material']} {armor_vals_2['type']}',
-                        '{armor_vals_3['material']} {armor_vals_3['type']}',
-                        '{armor_vals_4['material']} {armor_vals_4['type']}'
-                    )
-                ''')[0]
-
-                cstat_vals = compute_stats(stat_vals)
-
-                npc_sheets[npc] = {
-                        'role': role,
-                        'stat_vals': stat_vals,
-                        'stat_sum': stat_sum,
-                        'skill_vals': skill_vals,
-                        'weapon_vals': weapon_vals,
-                        'armor_vals': [armor_vals_1,armor_vals_2,armor_vals_3,armor_vals_4],
-                        'armor_sp': armor_sp,
-                        'cstat_vals': cstat_vals
-                }
+        if '0_update' not in list(request.form.keys()):
 
             # Get role
             role = request.form['0_role']
