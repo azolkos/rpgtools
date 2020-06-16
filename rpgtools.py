@@ -23,6 +23,7 @@ def update_npcs(keys, form):
     npc_ids = list(set([int(x[0]) for x in keys if x[0] != '0']))
 
     for npc in npc_ids:
+        handle = form[f'{npc}_handle']
         role = form[f'{npc}_role']
 
         stat_vals = {}
@@ -66,6 +67,7 @@ def update_npcs(keys, form):
         cstat_vals = compute_stats(stat_vals)
 
         npc_sheets[npc] = {
+                'handle': handle,
                 'role': role,
                 'stat_vals': stat_vals,
                 'stat_sum': stat_sum,
@@ -193,6 +195,7 @@ def npcgenerator():
             cstat_vals = compute_stats(stat_vals)
 
             npc_sheets[npc_id] = {
+                    'handle': '',
                     'role': role,
                     'stat_vals': stat_vals,
                     'stat_sum': stat_sum,

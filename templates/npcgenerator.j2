@@ -16,7 +16,7 @@
         {% for npc in npc_sheets %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
-                <td colspan="12" style="vertical-align: middle"><input type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle"></td>
+                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ npc_sheets[npc]['handle'] }}"></td>
                 <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ npc_sheets[npc]['role'] }}">{{ npc_sheets[npc]['role'] }}</input></td>
                 <td colspan="16" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
             </tr>
