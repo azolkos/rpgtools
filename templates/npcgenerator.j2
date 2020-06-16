@@ -3,21 +3,22 @@
 {% block content %}
     {# Input parameters #}
      <form action="/npcgenerator" method="POST">
-        <select name="role_select">
+        <select name="0_role">
             <option value="Random">Random</option>
             {% for role in roles %}
             <option value="{{ role['name'] }}">{{ role['name'] }}</option>
             {% endfor %}
         </select>
         <button class="w3-button w3-black" type="submit">POST</button>
-        <input name="update" class="w3-button w3-black w3-right" type="submit" value="update"></input>
+        <input name="0_update" class="w3-button w3-black w3-right" type="submit" value="update"></input>
     
         {# NPC character sheets #}
         {% for npc in npc_sheets %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
-                <td colspan="12"><input type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle"></td>
-                <td colspan="12"><input name="{{ npc }}_role" type="hidden" value="{{ npc_sheets[npc]['role'] }}">{{ npc_sheets[npc]['role'] }}</input></td>
+                <td colspan="12" style="vertical-align: middle"><input type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle"></td>
+                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ npc_sheets[npc]['role'] }}">{{ npc_sheets[npc]['role'] }}</input></td>
+                <td colspan="16" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
             </tr>
             <tr>
                 <td colspan="6">
@@ -73,6 +74,7 @@
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
                             <td>
                                 <select name="{{ npc }}_weapon_1">
+                                        <option value="None">None</option>
                                     {% for cat in weapons_cat %}
                                         <optgroup label="{{ cat['cat'] }}">
                                             {% for weapon in weapons if weapon['cat'] == cat['cat'] %}

@@ -23,7 +23,7 @@ function updateHitbox(id, w_max, w_min) {
     }
 }
 
-function add_weapon_select(npc){
+function add_weapon_select(npc) {
     var sel = document.getElementById(npc+'_weaponselect_1')
     if (sel.style.display == 'none') {
         sel.style.display = 'block';
@@ -45,6 +45,10 @@ function add_weapon_select(npc){
     }
 }
 
-function remove_weapon(id){
+function remove_weapon(id) {
     document.getElementById(id).remove();
+}
+
+function remove_npc(npc) {
+    document.getElementById('npc_'+npc).remove();
 }
