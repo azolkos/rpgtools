@@ -96,6 +96,63 @@
                             <td>Some name of cyberware</td>
                         </tr>
                     </table>
+                    <table>
+                        <tr>
+                            <td colspan="6" class="npc_section_header">ARMOR</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <select name="{{ npc }}_armor_helmet" style="width: 100%">
+                                    <option value="None">None</option>
+                                    {% for piece in armor[0] %}
+                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
+                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][0]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][0]['type'] %}
+                                        selected="selected"
+                                        {% endif %}
+                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td colspan="3">
+                                <select name="{{ npc }}_armor_jacket" style="width: 100%">
+                                    <option value="None">None</option>
+                                    {% for piece in armor[1] %}
+                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
+                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][1]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][1]['type'] %}
+                                        selected="selected"
+                                        {% endif %}
+                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <select name="{{ npc }}_armor_vest" style="width: 100%">
+                                    <option value="None">None</option>
+                                    {% for piece in armor[2] %}
+                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
+                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][2]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][2]['type'] %}
+                                        selected="selected"
+                                        {% endif %}
+                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td colspan="3">
+                                <select name="{{ npc }}_armor_pants" style="width: 100%">
+                                    <option value="None">None</option>
+                                    {% for piece in armor[3] %}
+                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
+                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][3]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][3]['type'] %}
+                                        selected="selected"
+                                        {% endif %}
+                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
@@ -122,7 +179,7 @@
                 <td colspan="20">
                     <table>
                         <tr>
-                            <td colspan="6"><span class="npc_section_header">ARMOR</span>: {{ npc_sheets[npc]['armor_vals']['material'] }} {{ npc_sheets[npc]['armor_vals']['type'] }}</td>
+                            <td colspan="6" class="npc_section_header">DEFENCE</td>
                         </tr>
                         <tr style="text-align: center">
                             {% for body_part in bodyparts %}
@@ -141,12 +198,12 @@
                             {% endfor %}
                         </tr>
                         <tr style="text-align: center">
-                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_head'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_torso'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_larm'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_rarm'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_lleg'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_vals']['sp_rleg'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_head'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_torso'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_larm'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_rarm'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_lleg'] }}]</td>
+                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_rleg'] }}]</td>
                         </tr>
                     </table>
                 </td>

@@ -562,7 +562,9 @@ order by wcs.idx
 
 
 
-
+select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
+from armor
+where material || ' ' || type in ('Nylon Helmet','Leather Vest','Medium Kevlar Jacket', 'Light Kevlar Pants')
 
 
 

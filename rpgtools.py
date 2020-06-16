@@ -82,10 +82,29 @@ def npcgenerator():
         weapon_vals = random.choices(weapon_db, k=2)
 
         # Generate Armor
-        armor_pts = random.randint(1,10)
-        armor_roll_db = query_db(f'select material from npc_armor_roll where pts_from <= {armor_pts} and coalesce(pts_to,99) >= {armor_pts}')[0]
-        armor_db = query_db(f'select * from armor where material="{armor_roll_db["material"]}"')
-        armor_vals = random.choice(armor_db)
+        # armor_pts = random.randint(1,10)
+        # armor_roll_db = query_db(f'select material from npc_armor_roll where pts_from <= {armor_pts} and coalesce(pts_to,99) >= {armor_pts}')[0]
+        # armor_db = query_db(f'select * from armor where material="{armor_roll_db["material"]}"')
+        armor_db_1 = query_db('select * from armor where type="Helmet" order by sp_head,sp_torso,sp_larm,sp_lleg')
+        armor_db_2 = query_db('select * from armor where type="Jacket" order by sp_head,sp_torso,sp_larm,sp_lleg')
+        armor_db_3 = query_db('select * from armor where type="Vest" order by sp_head,sp_torso,sp_larm,sp_lleg')
+        armor_db_4 = query_db('select * from armor where type="Pants" order by sp_head,sp_torso,sp_larm,sp_lleg')
+        armor_vals_1 = random.choice(armor_db_1)
+        armor_vals_2 = random.choice(armor_db_2)
+        armor_vals_3 = random.choice(armor_db_3)
+        armor_vals_4 = random.choice(armor_db_4)
+
+        # Generate computed armor sp
+        armor_sp = query_db(f'''
+            select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
+            from armor
+            where material || ' ' || type in (
+                '{armor_vals_1['material']} {armor_vals_1['type']}',
+                '{armor_vals_2['material']} {armor_vals_2['type']}',
+                '{armor_vals_3['material']} {armor_vals_3['type']}',
+                '{armor_vals_4['material']} {armor_vals_4['type']}'
+            )
+        ''')[0]
 
         # Generate computed stats
         cstat_db = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
@@ -128,13 +147,22 @@ def npcgenerator():
         wounds_min = min([x[2] for x in wounds])
 
         npc_sheets = {
-            1: {'role': role, 'stat_vals': stat_vals, 'stat_sum': stat_sum, 'skill_vals': skill_vals, 'weapon_vals': weapon_vals, 'armor_vals': armor_vals, 'cstat_vals': cstat_vals}
+            1: {'role': role, 
+                'stat_vals': stat_vals,
+                'stat_sum': stat_sum,
+                'skill_vals': skill_vals,
+                'weapon_vals': weapon_vals,
+                'armor_vals': [armor_vals_1,armor_vals_2,armor_vals_3,armor_vals_4],
+                'armor_sp': armor_sp,
+                'cstat_vals': cstat_vals
+                }
         }
 
         return render_template('npcgenerator.j2',
             roles=roles,
             weapons=weapons,
             weapons_cat=weapons_cat,
+            armor=[armor_db_1,armor_db_2,armor_db_3,armor_db_4],
             bodyparts=bodyparts,
             wounds=wounds,
             wounds_max=wounds_max,
