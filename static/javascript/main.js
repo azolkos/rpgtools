@@ -28,7 +28,7 @@ function add_weapon_select(npc) {
     if (sel.style.display == 'none') {
         sel.style.display = 'block';
     } else {
-        var t = document.getElementById('weapons_table');
+        var t = document.getElementById(npc+'_weapons_table');
         var r = t.insertRow();
         var c = r.insertCell();
         for (let i=1;;i++) {
