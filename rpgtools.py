@@ -38,7 +38,8 @@ def update_npcs(keys, form):
 
         weapon_vals = []
         for weapon in [x for x in keys if int(x[0]) == npc and x[1] == 'weapon']:
-            w = form['_'.join(weapon)]
+            w = form['_'.join(weapon)].replace('"','""')
+            print(w)
             w_db = query_db(f'select * from weapons where name="{w}"')
             for r in w_db:
                 if r != []:

@@ -61,14 +61,14 @@
                             <td style="text-align: center">rel</td>
                         </tr>
                         {% for weapon in npc_sheets[npc]['weapon_vals'] %}
-                        <tr id="{{ npc }}_weapon_{{ weapon['name'] }}" style="text-align: center">
-                            <td style="text-align: left"><input name="{{ npc }}_weapon_{{ weapon['name'] }}" type="hidden" value="{{ weapon['name'] }}">{{ weapon['name'] }}</input></td>
+                        <tr id="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" style="text-align: center">
+                            <td style="text-align: left"><input name="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" type="hidden" value="{{ weapon['name']|replace('"','&quot;') }}">{{ weapon['name'] }}</input></td>
                             <td>{{ weapon['type'] }}</td>
                             <td>{{ weapon['accuracy'] }}</td>
                             <td>{{ weapon['damage'] }}</td>
                             <td>{{ weapon['shots'] }}/{{ weapon['rof'] }}</td>
                             <td>{{ weapon['reliability'] }}</td>
-                            <td class="row_op" onClick="remove_weapon('{{ npc }}_weapon_{{ weapon['name'] }}')">-</td>
+                            <td class="row_op" onClick="remove_weapon('{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}')">-</td>
                         </tr>
                         {% endfor %}
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
@@ -78,7 +78,7 @@
                                     {% for cat in weapons_cat %}
                                         <optgroup label="{{ cat['cat'] }}">
                                             {% for weapon in weapons if weapon['cat'] == cat['cat'] %}
-                                                <option value="{{ weapon['name'] }}">{{ weapon['name'] }}</option>
+                                                <option value="{{ weapon['name']|replace('"','&quot;') }}">{{ weapon['name'] }}</option>
                                             {% endfor %}
                                         </optgroup>
                                     {% endfor %}
