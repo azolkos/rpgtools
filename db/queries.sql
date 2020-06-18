@@ -6,6 +6,15 @@ drop table body_types;
 drop table stats;
 drop table roles;
 
+create table levels (
+    id text,
+    lvl number
+);
+
+insert into levels (id,lvl) values ('Weak',1);
+insert into levels (id,lvl) values ('Average',2);
+insert into levels (id,lvl) values ('Strong',3);
+
 create table roles (
     name text not null primary key
 );
