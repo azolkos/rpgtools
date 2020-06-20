@@ -318,13 +318,13 @@ create table wounds (
 insert into wounds (wound, abr, stun_save_mod) values ('Light', 'Lite', 0);
 insert into wounds (wound, abr, stun_save_mod) values ('Serious', 'Srs', -1);
 insert into wounds (wound, abr, stun_save_mod) values ('Critical', 'Crt', -2);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 0', 'Mrt', -3);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 1', 'Mrt', -4);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 2', 'Mrt', -5);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 3', 'Mrt', -6);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 4', 'Mrt', -7);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 5', 'Mrt', -8);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 6', 'Mrt', -9);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 0', 'Mrt0', -3);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 1', 'Mrt1', -4);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 2', 'Mrt2', -5);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 3', 'Mrt3', -6);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 4', 'Mrt4', -7);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 5', 'Mrt5', -8);
+insert into wounds (wound, abr, stun_save_mod) values ('Mortal 6', 'Mrt6', -9);
 
 create table weapon_types (
   id text not null primary key,
@@ -569,7 +569,7 @@ left join weapon_subtypes ws on ws.id = w.subtype
 join weapon_cat_sort wcs on wcs.cat = coalesce(ws.name || ' ', '') || wt.name || 's'
 order by wcs.idx
 
-
+select * from wounds;
 
 select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
 from armor

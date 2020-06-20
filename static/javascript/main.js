@@ -26,7 +26,7 @@ function updateHitbox(id, w_max, w_min) {
 function add_weapon_select(npc) {
     var sel = document.getElementById(npc+'_weaponselect_1')
     if (sel.style.display == 'none') {
-        sel.style.display = 'block';
+        sel.style.display = '';
     } else {
         var t = document.getElementById(npc+'_weapons_table');
         var r = t.insertRow();

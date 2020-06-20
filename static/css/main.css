@@ -44,11 +44,11 @@ input[type=number] {
     border: none;
     text-align: center;
     height: 12px;
-    width: 2ch
+    width: 3ch
 }
 
 .skill_list_col {
-    width: 150px;
+    width: 200px;
 }
 
 .row_op {

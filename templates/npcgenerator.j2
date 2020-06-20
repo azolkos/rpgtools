@@ -15,7 +15,7 @@
             <option value="{{ role['name'] }}">{{ role['name'] }}</option>
             {% endfor %}
         </select>
-        <button class="w3-button w3-black" type="submit">POST</button>
+        <button class="w3-button w3-black" type="submit">GENERATE</button>
         <input name="0_update" class="w3-button w3-black w3-right" type="submit" value="update"></input>
     
         {# NPC character sheets #}
@@ -36,7 +36,7 @@
                         {% for stat in npc_sheets[npc]['stat_vals'] %}
                         <tr>
                             <td>{{ stat }}</td>
-                            <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['stat_vals'][stat] }}" value="{{ npc_sheets[npc]['stat_vals'][stat] }}"></input>]</td>
+                            <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['stat_vals'][stat] }}" value="{{ npc_sheets[npc]['stat_vals'][stat] }}" required></input>]</td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -49,7 +49,7 @@
                         {% for skill in npc_sheets[npc]['skill_vals'] %}
                         <tr>
                             <td class="skill_list_col">{{ skill }}</td>
-                            <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" value="{{ npc_sheets[npc]['skill_vals'][skill][0] }}"></input>]</td>
+                            <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" value="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" required></input>]</td>
                             {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
                             <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
                             {% endif %}
@@ -79,7 +79,7 @@
                         </tr>
                         {% endfor %}
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
-                            <td>
+                            <td colspan="6">
                                 <select name="{{ npc }}_weapon_1">
                                         <option value="None">None</option>
                                     {% for cat in weapons_cat %}

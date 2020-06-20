@@ -23,7 +23,7 @@ def compute_stats(stat_vals):
     return cstat_vals
 
 def compute_armorsp(armor_vals_1, armor_vals_2, armor_vals_3, armor_vals_4):
-    return query_db(f'''
+    ret = query_db(f'''
         select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
         from armor
         where material || ' ' || type in (
@@ -33,3 +33,6 @@ def compute_armorsp(armor_vals_1, armor_vals_2, armor_vals_3, armor_vals_4):
             '{armor_vals_4['material']} {armor_vals_4['type']}'
         )
     ''')[0]
+    if not any(ret[:]):
+        return {'sp_head':0,'sp_torso':0,'sp_larm':0,'sp_rarm':0,'sp_lleg':0,'sp_rleg':0}
+    return ret
