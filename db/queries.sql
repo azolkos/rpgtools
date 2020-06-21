@@ -1,330 +1,352 @@
+pragma foreign_keys = 'on';
+
+drop view weapon_cat_sort;
+drop table npc_armor_roll;
+drop table armor;
+drop table npc_weapon_roll;
+drop table weapons;
+drop table weapon_subtypes;
+drop table weapon_reliability;
+drop table weapon_availability;
+drop table weapon_concealability;
+drop table weapon_types;
 drop table wounds;
 drop table career_skills;
 drop table skills;
 drop table task_difficulties;
+drop table body_parts;
 drop table body_types;
 drop table stats;
 drop table roles;
+drop table levels;
 
 create table levels (
-    id text,
+    id text not null primary key,
     lvl number
 );
 
 insert into levels (id,lvl) values ('Weak',1);
 insert into levels (id,lvl) values ('Average',2);
-insert into levels (id,lvl) values ('Strong',3);
+insert into levels (id,lvl) values ('Minor Supporting',3);
+insert into levels (id,lvl) values ('Minor Hero',4);
+insert into levels (id,lvl) values ('Major Supporting',5);
+insert into levels (id,lvl) values ('Major Hero',6);
 
+-- Roles
 create table roles (
-    name text not null primary key
+    id text not null primary key,
+    info text
 );
-insert into roles (name) values ('Solo');
-insert into roles (name) values ('Rocker');
-insert into roles (name) values ('Netrunner');
-insert into roles (name) values ('Media');
-insert into roles (name) values ('Nomad');
-insert into roles (name) values ('Fixer');
-insert into roles (name) values ('Cop');
-insert into roles (name) values ('Corp');
-insert into roles (name) values ('Techie');
-insert into roles (name) values ('Medtechie');
+insert into roles (id,info) values ('Soldier',null); --- walczący, wyszkolony w używaniu broni, ...
+insert into roles (id,info) values ('Thug',null); --- brawler, streetwise, legia, ...
+insert into roles (id,info) values ('Rogue',null); --- sprytny, streetwise, forgery, ...
+insert into roles (id,info) values ('Hackman',null); --- programming, hacking, electronic sec, ...
+insert into roles (id,info) values ('Techie',null); --- spawacz, naprawiacz rzeczy, electronics, robol, zlota rączka, ...
+insert into roles (id,info) values ('Medic',null); --- leczy, ogarnia, załatwia dragi, surgery, ...
+insert into roles (id,info) values ('Corporate',null); --- finance & shit, persuasion, bluff, ...
+insert into roles (id,info) values ('Artist',null); --- tworzy sztukę, widzi piękno w rzeczach, w których inni widzą gówno, ...
+insert into roles (id,info) values ('Activist',null); --- charyzma, gadanie do ludzi, nauki społeczne, teaching, ...
+insert into roles (id,info) values ('Scientist',null); --- jakieś dziedziny naukowe (ścisłe) do wyboru + umiejętności typu teaching, ...
 
+-- Stats
 create table stats (
-    stat text not null primary key,
+    id text not null primary key,
     idx number,
     idy number,
     type text,
-    multiplier number
+    multiplier number,
+    info text
 );
-insert into stats (stat,idx,idy,type,multiplier) values ('INT',1,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('REF',2,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('TECH',3,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('COOL',4,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('ATTR',5,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('LUCK',6,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('MA',7,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('BODY',8,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('EMP',9,null,'primary',null);
-insert into stats (stat,idx,idy,type,multiplier) values ('RUN',1,1,'MA',3);
-insert into stats (stat,idx,idy,type,multiplier) values ('REP',1,2,null,3);
-insert into stats (stat,idx,idy,type,multiplier) values ('DMG',1,3,null,3);
-insert into stats (stat,idx,idy,type,multiplier) values ('LEAP',2,1,'MA',0.75);
-insert into stats (stat,idx,idy,type,multiplier) values ('SAVE',2,3,'BODY',1);
-insert into stats (stat,idx,idy,type,multiplier) values ('LIFT',3,1,'BODY',40);
-insert into stats (stat,idx,idy,type,multiplier) values ('HUMANITY',3,2,'EMP',10);
-insert into stats (stat,idx,idy,type,multiplier) values ('BTM',3,3,'BODY',null);
+insert into stats (id,idx,idy,type,multiplier,info) values ('REF',1,null,'primary',null,'REFLEX is a combined index, covering not only your basic dexterity, but also how your level of physical coordination will affect feats of driving, piloting, fighting and athletics.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('MA',2,null,'primary',null,'MOVEMENT ALLOWANCE is an index of how fast character can run (important in combat situations). The higher your Movement Allowance (MA), the more distance you can cover in turn.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('BODY',3,null,'primary',null,'Strength, Endurance and Constitution are all based on the character''s BODY TYPE. BODY TYPE determines how much damage you can take in wounds, how much you can lift or carry. How far you can throw, how well you recover from shock, and how much additional damage you cause with physical attacks.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('INT',4,null,'primary',null,'INTELLIGENCE is a measure of your problem solving ability; figuring out problems, noticing things, abstract thinking.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('WIS',5,null,'primary',null,'WISDOM is a measure of your common sense and knowledge. It also describes how down to earth you are.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('COOL',6,null,'primary',null,'COOL measures how well the character stands up to stress, pressure, physical pain and/or torture. In determining your willingness to fight on despite wounds or your fighting ability under fire, COOL is essential. It is also the measure of how "together" your character is and how tough he appears to others.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('TECH',7,null,'primary',null,'TECHNICAL ABILITY is an index of how well you relate to hardware and other technically oriented things.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('CHAR',8,null,'primary',null,'CHARISMA describes your overall ability in social interactions. It includes how attractive you are, your emotional intelligence and your communication skills.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('LUCK',9,null,'primary',null,'LUCK is the intangible "something" that throws the balance of events into your favor. Your luck represents how many points you may use each game to influence the outcome of critical event. To use Luck, you may add any or all the points of luck a character has to a critical die roll (declaring your inetntion to use Luck before the roll is made) until all of your Luck stat is used up. Luck is always restored at the end of each game session.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('REP',10,null,'secondary',null,'REPUTATION describes the chance of being identified by strangers.');
 
--- Tu trzeba jakies inserty zrobić
-create table npc_stats_roll (
-    role_id text,
-    stat_id text,
-    lvl number,
-    pts_from number,
-    pts_to number
-);
+insert into stats (id,idx,idy,type,multiplier,info) values ('RUN',1,1,'MA',3,'To determine how far your character can run in a single combat round (@3.2 seconds) in meters, multiply your MA by 3. The character can run three times this distance in full 10 seconds turn.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('LEAP',2,1,'MA',0.75,'To determine how far your character can leap (from running start), divide your RUN by 4.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('CARRY',1,2,'BODY',10,'You may carry up to 10x Body Type in kg.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('LIFT',2,2,'BODY',40,'You may dead lift 40 times your Body Type in kg.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('DMG',1,3,null,3,'Compute damage bonus from BODY for use in melee weapons.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('SAVE',2,3,'BODY',1,'Your character''s Save Number is a value equal to your Body Type. To make saves, you must roll a value on 1D10 equal or lower than this number.');
+insert into stats (id,idx,idy,type,multiplier,info) values ('BTM',3,3,'BODY',null,'Not all people take damage the same way. For example, it takes a lot more damage to stop Arnold The Terminator than it does Arnold The Nerd. This is reflected by the Body Type Modifier, a special bonus used by your character to reduce the effects of damage. The Body type modifier is subtracted from any damage your character takes in combat.');
 
+-- Body types
 create table body_types (
-    body_type text not null primary key,
+    id text not null primary key,
     pts_from number not null,
     pts_to number,
-    modifier number
+    bt_modifier number,
+    dmg_modifier number
 );
-insert into body_types (body_type, pts_from, pts_to, modifier) values ('Very Weak',1,2,0);
-insert into body_types (body_type, pts_from, pts_to, modifier) values ('Weak',3,4,-1);
-insert into body_types (body_type, pts_from, pts_to, modifier) values ('Average',5,7,-2);
-insert into body_types (body_type, pts_from, pts_to, modifier) values ('Strong',8,9,-3);
-insert into body_types (body_type, pts_from, pts_to, modifier) values ('Very Strong',10,10,-4);
-insert into body_types (body_type, pts_from, pts_to, modifier) values ('Superhuman',11,null,-5);
+insert into body_types (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Very Weak',1,2,0,-2);
+insert into body_types (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Weak',3,4,-1,-1);
+insert into body_types (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Average',5,7,-2,0);
+insert into body_types (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Strong',8,9,-3,1);
+insert into body_types (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Very Strong',10,10,-4,2);
+insert into body_types (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Superhuman',11,null,-5,4);
 
+-- Body parts
 create table body_parts (
-    body_part text not null primary key,
+    id text not null primary key,
     idx number,
     d_from number,
     d_to number
 );
 
-insert into body_parts (body_part, idx, d_from, d_to) values ('Head',1,1,1);
-insert into body_parts (body_part, idx, d_from, d_to) values ('Torso',2,2,4);
-insert into body_parts (body_part, idx, d_from, d_to) values ('L.Arm',3,5,5);
-insert into body_parts (body_part, idx, d_from, d_to) values ('R.Arm',4,6,6);
-insert into body_parts (body_part, idx, d_from, d_to) values ('L.Leg',5,7,8);
-insert into body_parts (body_part, idx, d_from, d_to) values ('R.Leg',6,9,0);
+insert into body_parts (id,idx,d_from,d_to) values ('Head',1,1,1);
+insert into body_parts (id,idx,d_from,d_to) values ('Torso',2,2,4);
+insert into body_parts (id,idx,d_from,d_to) values ('L.Arm',3,5,5);
+insert into body_parts (id,idx,d_from,d_to) values ('R.Arm',4,6,6);
+insert into body_parts (id,idx,d_from,d_to) values ('L.Leg',5,7,8);
+insert into body_parts (id,idx,d_from,d_to) values ('R.Leg',6,9,0);
 
+-- Task difficulties
 create table task_difficulties (
-    difficulty text not null primary key,
+    id text not null primary key,
     from_pts number not null,
     to_pts
 );
-insert into task_difficulties (difficulty, from_pts, to_pts) values ('Easy',10,14);
-insert into task_difficulties (difficulty, from_pts, to_pts) values ('Average',15,19);
-insert into task_difficulties (difficulty, from_pts, to_pts) values ('Diffucult',20,24);
-insert into task_difficulties (difficulty, from_pts, to_pts) values ('Very Difficult',25,29);
-insert into task_difficulties (difficulty, from_pts, to_pts) values ('Nearly Impossible',30,null);
+insert into task_difficulties (id,from_pts,to_pts) values ('Easy',10,14);
+insert into task_difficulties (id,from_pts,to_pts) values ('Average',15,19);
+insert into task_difficulties (id,from_pts,to_pts) values ('Diffucult',20,24);
+insert into task_difficulties (id,from_pts,to_pts) values ('Very Difficult',25,29);
+insert into task_difficulties (id,from_pts,to_pts) values ('Nearly Impossible',30,null);
 
+-- Skills
 create table skills (
-    skill text not null primary key,
+    id text not null primary key,
     stat_id text,
-    foreign key(stat_id) references stats(stat)
+    info text,
+    foreign key(stat_id) references stats(id)
 );
-insert into skills (skill, stat_id) values ('Authority',null);
-insert into skills (skill, stat_id) values ('Charismatic Leadership',null);
-insert into skills (skill, stat_id) values ('Combat Sense',null);
-insert into skills (skill, stat_id) values ('Credibility',null);
-insert into skills (skill, stat_id) values ('Family',null);
-insert into skills (skill, stat_id) values ('Interface',null);
-insert into skills (skill, stat_id) values ('Jury Rig',null);
-insert into skills (skill, stat_id) values ('Medical Tech',null);
-insert into skills (skill, stat_id) values ('Resources',null);
-insert into skills (skill, stat_id) values ('Streetdeal',null);
-insert into skills (skill, stat_id) values ('Personal Grooming','ATTR');
-insert into skills (skill, stat_id) values ('Wardrobe & Style','ATTR');
-insert into skills (skill, stat_id) values ('Endurance','BODY');
-insert into skills (skill, stat_id) values ('Strength Feat','BODY');
-insert into skills (skill, stat_id) values ('Swimming','BODY');
-insert into skills (skill, stat_id) values ('Interrogation','COOL');
-insert into skills (skill, stat_id) values ('Intimidate','COOL');
-insert into skills (skill, stat_id) values ('Oratory','COOL');
-insert into skills (skill, stat_id) values ('Resist Torture/Drugs','COOL');
-insert into skills (skill, stat_id) values ('Streetwise','COOL');
-insert into skills (skill, stat_id) values ('Human Perception','EMP');
-insert into skills (skill, stat_id) values ('Interview','EMP');
-insert into skills (skill, stat_id) values ('Leadership','EMP');
-insert into skills (skill, stat_id) values ('Seduction','EMP');
-insert into skills (skill, stat_id) values ('Social','EMP');
-insert into skills (skill, stat_id) values ('Persuasion & Fast Talk','EMP');
-insert into skills (skill, stat_id) values ('Perform','EMP');
-insert into skills (skill, stat_id) values ('Accounting','INT');
-insert into skills (skill, stat_id) values ('Anthropology','INT');
-insert into skills (skill, stat_id) values ('Awareness/Notice','INT');
-insert into skills (skill, stat_id) values ('Biology','INT');
-insert into skills (skill, stat_id) values ('Botany','INT');
-insert into skills (skill, stat_id) values ('Chemistry','INT');
-insert into skills (skill, stat_id) values ('Composition','INT');
-insert into skills (skill, stat_id) values ('Diagnose Illness','INT');
-insert into skills (skill, stat_id) values ('Education & General Knowledge','INT');
-insert into skills (skill, stat_id) values ('Expert','INT');
-insert into skills (skill, stat_id) values ('Gamble','INT');
-insert into skills (skill, stat_id) values ('Geology','INT');
-insert into skills (skill, stat_id) values ('Hide/Evade','INT');
-insert into skills (skill, stat_id) values ('History','INT');
-insert into skills (skill, stat_id) values ('Know Language (choose one)','INT');
-insert into skills (skill, stat_id) values ('Library Search','INT');
-insert into skills (skill, stat_id) values ('Mathematics','INT');
-insert into skills (skill, stat_id) values ('Physics','INT');
-insert into skills (skill, stat_id) values ('Programming','INT');
-insert into skills (skill, stat_id) values ('Shadow/Track','INT');
-insert into skills (skill, stat_id) values ('Stock Market','INT');
-insert into skills (skill, stat_id) values ('System Knowledge','INT');
-insert into skills (skill, stat_id) values ('Teaching','INT');
-insert into skills (skill, stat_id) values ('Wilderness Survival','INT');
-insert into skills (skill, stat_id) values ('Zoology','INT');
-insert into skills (skill, stat_id) values ('Archery','REF');
-insert into skills (skill, stat_id) values ('Athletics','REF');
-insert into skills (skill, stat_id) values ('Brawling','REF');
-insert into skills (skill, stat_id) values ('Dance','REF');
-insert into skills (skill, stat_id) values ('Dodge & Escape','REF');
-insert into skills (skill, stat_id) values ('Driving','REF');
-insert into skills (skill, stat_id) values ('Fencing','REF');
-insert into skills (skill, stat_id) values ('Handgun','REF');
-insert into skills (skill, stat_id) values ('Heavy Weapons','REF');
-insert into skills (skill, stat_id) values ('Martial Art (choose types)','REF');
-insert into skills (skill, stat_id) values ('Melee','REF');
-insert into skills (skill, stat_id) values ('Motorcycle','REF');
-insert into skills (skill, stat_id) values ('Operate Heavy Machinery','REF');
-insert into skills (skill, stat_id) values ('Pilot','REF');
-insert into skills (skill, stat_id) values ('Pilot (Gyro)','REF');
-insert into skills (skill, stat_id) values ('Pilot (Fixed Wing)','REF');
-insert into skills (skill, stat_id) values ('Pilot (Dirigible)','REF');
-insert into skills (skill, stat_id) values ('Pilot (Vect. Trust Vehicle)','REF');
-insert into skills (skill, stat_id) values ('Rifle','REF');
-insert into skills (skill, stat_id) values ('Stealth','REF');
-insert into skills (skill, stat_id) values ('Submachinegun','REF');
-insert into skills (skill, stat_id) values ('Aero Tech','TECH');
-insert into skills (skill, stat_id) values ('AV Tech','TECH');
-insert into skills (skill, stat_id) values ('Basic Tech','TECH');
-insert into skills (skill, stat_id) values ('Cryotank Operation','TECH');
-insert into skills (skill, stat_id) values ('Cyberdeck Design','TECH');
-insert into skills (skill, stat_id) values ('CyberTech','TECH');
-insert into skills (skill, stat_id) values ('Demolitions','TECH');
-insert into skills (skill, stat_id) values ('Disguise','TECH');
-insert into skills (skill, stat_id) values ('Electronics','TECH');
-insert into skills (skill, stat_id) values ('Electronic Security','TECH');
-insert into skills (skill, stat_id) values ('First Aid','TECH');
-insert into skills (skill, stat_id) values ('Forgery','TECH');
-insert into skills (skill, stat_id) values ('Gyro Tech','TECH');
-insert into skills (skill, stat_id) values ('Paint or Draw','TECH');
-insert into skills (skill, stat_id) values ('Photo & Film','TECH');
-insert into skills (skill, stat_id) values ('Pharmaceuticals','TECH');
-insert into skills (skill, stat_id) values ('Pick Lock','TECH');
-insert into skills (skill, stat_id) values ('Pick Pocket','TECH');
-insert into skills (skill, stat_id) values ('Play Instrument','TECH');
-insert into skills (skill, stat_id) values ('Weaponsmith','TECH');
+insert into skills (id,stat_id,info) values ('Personal Grooming','CHAR','This is the skill of knowing proper grooming, hair styling, etc., to maximize your physical attractiveness. Use of this skill allows players to increase their Attractiveness, and thus their chances of successful Relationships or Persuasion. A basically good looking person would be at +2. A fashion model might have a Personal Grooming of +5 or +6. At +8 or better, you could be major fashion model, film star, or trendsetter. You are always "together". And know it.');
+insert into skills (id,stat_id,info) values ('Wardrobe & Style','CHAR','The skill of knowing the right clothes to wear, when to wear them, and how to look cool even in a spacesuit. With Wardrobe +2 or better, you are good at choosing clothes off the rack. At +6, your friends ask you for wardrobe tips, and you never buy anything off the rack. At +8 or better, you are one of those rare people whose personal style influences major fashion trends.');
+insert into skills (id,stat_id,info) values ('Interview','CHAR',null);
+insert into skills (id,stat_id,info) values ('Leadership','CHAR',null);
+insert into skills (id,stat_id,info) values ('Seduction','CHAR',null);
+insert into skills (id,stat_id,info) values ('Bluff','CHAR',null);
+insert into skills (id,stat_id,info) values ('Social','CHAR',null);
+insert into skills (id,stat_id,info) values ('Persuasion & Fast Talk','CHAR',null);
+insert into skills (id,stat_id,info) values ('Human Perception','CHAR',null);
+insert into skills (id,stat_id,info) values ('Perform','CHAR',null);
 
+insert into skills (id,stat_id,info) values ('Endurance','BODY',null);
+insert into skills (id,stat_id,info) values ('Strength Feat','BODY',null);
+insert into skills (id,stat_id,info) values ('Swimming','BODY',null);
+insert into skills (id,stat_id,info) values ('Climbing','BODY',null);
+insert into skills (id,stat_id,info) values ('Throwing','BODY',null);
+
+insert into skills (id,stat_id,info) values ('Intimidate','COOL',null);
+insert into skills (id,stat_id,info) values ('Oratory','COOL',null);
+insert into skills (id,stat_id,info) values ('Resist Torture/Drugs','COOL',null);
+insert into skills (id,stat_id,info) values ('Streetwise','COOL',null);
+
+insert into skills (id,stat_id,info) values ('Chemistry','INT',null);
+insert into skills (id,stat_id,info) values ('Composition','INT',null);
+insert into skills (id,stat_id,info) values ('Gamble','INT',null);
+insert into skills (id,stat_id,info) values ('Database Search','INT',null);
+insert into skills (id,stat_id,info) values ('Mathematics','INT',null);
+insert into skills (id,stat_id,info) values ('Physics','INT',null);
+insert into skills (id,stat_id,info) values ('Programming','INT',null);
+insert into skills (id,stat_id,info) values ('Shadow/Track','INT',null);
+insert into skills (id,stat_id,info) values ('Economics','INT',null);
+insert into skills (id,stat_id,info) values ('Finance','INT',null);
+insert into skills (id,stat_id,info) values ('System Knowledge','INT',null);
+insert into skills (id,stat_id,info) values ('Teaching','INT',null);
+insert into skills (id,stat_id,info) values ('Wilderness survival','INT',null);
+insert into skills (id,stat_id,info) values ('Analytics','INT',null);
+insert into skills (id,stat_id,info) values ('Psychology','INT',null);
+insert into skills (id,stat_id,info) values ('Sociology','INT',null);
+
+insert into skills (id,stat_id,info) values ('Political Science','WIS',null);
+insert into skills (id,stat_id,info) values ('Geology','WIS',null);
+insert into skills (id,stat_id,info) values ('Anthropology','WIS',null);
+insert into skills (id,stat_id,info) values ('Biology','WIS',null);
+insert into skills (id,stat_id,info) values ('Diagnosis','WIS',null);
+insert into skills (id,stat_id,info) values ('First Aid','WIS',null);
+insert into skills (id,stat_id,info) values ('Natural Medicine','WIS',null);
+insert into skills (id,stat_id,info) values ('Pharmaceuticals','WIS',null);
+insert into skills (id,stat_id,info) values ('Surgery','WIS',null);
+insert into skills (id,stat_id,info) values ('History','WIS',null);
+insert into skills (id,stat_id,info) values ('Hide/Evade','WIS',null);
+insert into skills (id,stat_id,info) values ('General Knowledge','WIS',null);
+insert into skills (id,stat_id,info) values ('Awareness/Notice','WIS',null);
+
+insert into skills (id,stat_id,info) values ('Archery','REF',null);
+insert into skills (id,stat_id,info) values ('Athletics','REF',null);
+insert into skills (id,stat_id,info) values ('Brawling','REF',null);
+insert into skills (id,stat_id,info) values ('Dance','REF',null);
+insert into skills (id,stat_id,info) values ('Dodge & Escape','REF',null);
+insert into skills (id,stat_id,info) values ('Driving','REF',null);
+insert into skills (id,stat_id,info) values ('Fencing','REF',null);
+insert into skills (id,stat_id,info) values ('Handgun','REF',null);
+insert into skills (id,stat_id,info) values ('Heavy Weapons','REF',null);
+insert into skills (id,stat_id,info) values ('Boxing','REF',null);
+insert into skills (id,stat_id,info) values ('Wrestling','REF',null);
+insert into skills (id,stat_id,info) values ('Judo','REF',null);
+insert into skills (id,stat_id,info) values ('Aikido','REF',null);
+insert into skills (id,stat_id,info) values ('Karate','REF',null);
+insert into skills (id,stat_id,info) values ('Tea Kwon Do','REF',null);
+insert into skills (id,stat_id,info) values ('Melee','REF',null);
+insert into skills (id,stat_id,info) values ('Operate Heavy Machinery','REF',null);
+insert into skills (id,stat_id,info) values ('Pilot','REF',null);
+insert into skills (id,stat_id,info) values ('Rifle','REF',null);
+insert into skills (id,stat_id,info) values ('Stealth','REF',null);
+insert into skills (id,stat_id,info) values ('Submachinegun','REF',null);
+insert into skills (id,stat_id,info) values ('Pick Pocket','REF',null);
+
+insert into skills (id,stat_id,info) values ('Basic Tech','TECH',null);
+insert into skills (id,stat_id,info) values ('Engineering','TECH',null);
+insert into skills (id,stat_id,info) values ('Demolitions','TECH',null);
+insert into skills (id,stat_id,info) values ('Disguise','TECH',null);
+insert into skills (id,stat_id,info) values ('Electronics','TECH',null);
+insert into skills (id,stat_id,info) values ('Electronic Security','TECH',null);
+insert into skills (id,stat_id,info) values ('Forgery','TECH',null);
+insert into skills (id,stat_id,info) values ('Film & Draw','TECH',null);
+insert into skills (id,stat_id,info) values ('Pick Lock','TECH',null);
+insert into skills (id,stat_id,info) values ('Play Instrument','TECH',null);
+insert into skills (id,stat_id,info) values ('Weaponsmith','TECH',null);
+
+-- Career Skills
 create table career_skills (
     role_id text,
     skill_id text,
-    foreign key(role_id) references roles(name),
-    foreign key(skill_id) references skills(skill)
+    alt number,
+    alt_no number,
+    foreign key(role_id) references roles(id),
+    foreign key(skill_id) references skills(id)
 );
-insert into career_skills (role_id, skill_id) values ('Solo', 'Combat Sense');
-insert into career_skills (role_id, skill_id) values ('Solo', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Solo', 'Handgun');
---insert into career_skills (role_id, skill_id) values ('Solo', 'Brawling or Martial Arts'); -- Nie ma
-insert into career_skills (role_id, skill_id) values ('Solo', 'Melee');
---insert into career_skills (role_id, skill_id) values ('Solo', 'Weapons Tech'); -- Nie ma
-insert into career_skills (role_id, skill_id) values ('Solo', 'Rifle');
-insert into career_skills (role_id, skill_id) values ('Solo', 'Athletics');
-insert into career_skills (role_id, skill_id) values ('Solo', 'Submachinegun');
-insert into career_skills (role_id, skill_id) values ('Solo', 'Stealth');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Family');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Endurance');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Melee');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Rifle');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Driving');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Basic Tech');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Wilderness Survival');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Brawling');
-insert into career_skills (role_id, skill_id) values ('Nomad', 'Athletics');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Charismatic Leadership');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Perform');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Wardrobe & Style');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Composition');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Brawling');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Play Instrument');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Streetwise');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Persuasion & Fast Talk');
-insert into career_skills (role_id, skill_id) values ('Rocker', 'Seduction');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Interface');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Basic Tech');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Education & General Knowledge');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'System Knowledge');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'CyberTech');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Cyberdeck Design');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Composition');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Electronics');
-insert into career_skills (role_id, skill_id) values ('Netrunner', 'Programming');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Resources');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Human Perception');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Education & General Knowledge');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Library Search');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Social');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Persuasion & Fast Talk');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Stock Market');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Wardrobe & Style');
-insert into career_skills (role_id, skill_id) values ('Corp', 'Personal Grooming');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Jury Rig');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Basic Tech');
-insert into career_skills (role_id, skill_id) values ('Techie', 'CyberTech');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Teaching');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Education & General Knowledge');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Electronics');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Gyro Tech');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Aero Tech');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Weaponsmith');
-insert into career_skills (role_id, skill_id) values ('Techie', 'Electronic Security');
---insert into career_skills (role_id, skill_id) values ('Techie', 'Any three other'); -- Nie ma
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Medical Tech');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Basic Tech');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Diagnose Illness');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Education & General Knowledge');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Cryotank Operation');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Library Search');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Pharmaceuticals');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Zoology');
-insert into career_skills (role_id, skill_id) values ('Medtechie', 'Human Perception');
-insert into career_skills (role_id, skill_id) values ('Media', 'Credibility');
-insert into career_skills (role_id, skill_id) values ('Media', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Media', 'Composition');
-insert into career_skills (role_id, skill_id) values ('Media', 'Education & General Knowledge');
-insert into career_skills (role_id, skill_id) values ('Media', 'Persuasion & Fast Talk');
-insert into career_skills (role_id, skill_id) values ('Media', 'Human Perception');
-insert into career_skills (role_id, skill_id) values ('Media', 'Social');
-insert into career_skills (role_id, skill_id) values ('Media', 'Streetwise');
-insert into career_skills (role_id, skill_id) values ('Media', 'Photo & Film');
-insert into career_skills (role_id, skill_id) values ('Media', 'Interview');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Authority');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Handgun');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Human Perception');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Athletics');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Education & General Knowledge');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Brawling');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Melee');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Interrogation');
-insert into career_skills (role_id, skill_id) values ('Cop', 'Streetwise');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Streetdeal');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Awareness/Notice');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Forgery');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Handgun');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Brawling');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Melee');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Pick Lock');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Pick Pocket');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Intimidate');
-insert into career_skills (role_id, skill_id) values ('Fixer', 'Persuasion & Fast Talk');
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Handgun',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Submachinegun',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Rifle',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Melee',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Stealth',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Boxing',1,1);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Wrestling',1,1);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Judo',1,1);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Aikido',1,1);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Karate',1,1);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Tea Kwon Do',1,1);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Pilot',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Awareness/Notice',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Soldier','Athletics',null,null);
 
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Brawling',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Endurance',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Strength Feat',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Melee',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Driving',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Streetwise',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Intimidate',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Resist Torture/Drugs',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Thug','Handgun',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Pick Lock',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Stealth',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Pick Pocket',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Hide/Evade',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Dodge & Escape',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Awareness/Notice',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Shadow/Track',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Bluff',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Rogue','Disguise',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Programming',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Electronic Security',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Analytics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','System Knowledge',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Database Search',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Electronics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Mathematics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Gamble',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Hackman','Forgery',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Physics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Engineering',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Basic Tech',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Electronics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Weaponsmith',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Demolitions',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Operate Heavy Machinery',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Chemistry',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Techie','Pilot',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Natural Medicine',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Pharmaceuticals',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','First Aid',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Diagnosis',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Surgery',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Biology',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Anthropology',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Chemistry',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Medic','Interview',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Finance',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','General Knowledge',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Analytics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Social',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Leadership',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Human Perception',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Bluff',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Interview',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Corporate','Wardrobe & Style',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Film & Draw',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Oratory',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Play Instrument',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Dance',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Composition',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Persuasion & Fast Talk',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Perform',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Seduction',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Artist','Personal Grooming',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Sociology',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Political Science',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Oratory',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Persuasion & Fast Talk',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Psychology',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Teaching',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Social',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','General Knowledge',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Activist','Leadership',null,null);
+
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Database Search',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Interview',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Analytics',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','General Knowledge',null,null);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Mathematics',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Physics',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Chemistry',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Biology',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Anthropology',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Economics',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','History',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Geology',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Psychology',1,5);
+insert into career_skills (role_id,skill_id,alt,alt_no) values ('Scientist','Sociology',1,5);
 
 create table wounds (
-    wound not null primary key,
+    id not null primary key,
     abr text,
     stun_save_mod number
 );
-insert into wounds (wound, abr, stun_save_mod) values ('Light', 'Lite', 0);
-insert into wounds (wound, abr, stun_save_mod) values ('Serious', 'Srs', -1);
-insert into wounds (wound, abr, stun_save_mod) values ('Critical', 'Crt', -2);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 0', 'Mrt0', -3);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 1', 'Mrt1', -4);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 2', 'Mrt2', -5);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 3', 'Mrt3', -6);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 4', 'Mrt4', -7);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 5', 'Mrt5', -8);
-insert into wounds (wound, abr, stun_save_mod) values ('Mortal 6', 'Mrt6', -9);
+insert into wounds (id,abr,stun_save_mod) values ('Light', 'Lite', 0);
+insert into wounds (id,abr,stun_save_mod) values ('Serious', 'Srs', -1);
+insert into wounds (id,abr,stun_save_mod) values ('Critical', 'Crt', -2);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 0', 'Mrt0', -3);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 1', 'Mrt1', -4);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 2', 'Mrt2', -5);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 3', 'Mrt3', -6);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 4', 'Mrt4', -7);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 5', 'Mrt5', -8);
+insert into wounds (id,abr,stun_save_mod) values ('Mortal 6', 'Mrt6', -9);
 
 create table weapon_types (
   id text not null primary key,
@@ -395,6 +417,7 @@ create table weapons (
     cost number,
     info text,
     foreign key(type) references weapon_types(id),
+    foreign key(subtype) references weapon_subtypes(id),
     foreign key(concealability) references weapon_concealability(id),
     foreign key(availability) references weapon_availability(id),
     foreign key(reliability) references weapon_reliability(id)
@@ -529,8 +552,7 @@ insert into armor (type,material,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rle
 create table npc_armor_roll (
     pts_from number,
     pts_to number,
-    material text,
-    foreign key(material) references armor(material)
+    material text
 );
 
 insert into npc_armor_roll (pts_from, pts_to, material) values (1,2,'Leather');
@@ -560,20 +582,3 @@ create view weapon_cat_sort as
     select 'Submachineguns' cat, 17 idx union all
     select 'Rifles' cat, 18 idx
 ;
-
-
-select wcs.idx, wcs.cat, w.name
-from weapons w 
-join weapon_types wt on wt.id = w.type 
-left join weapon_subtypes ws on ws.id = w.subtype
-join weapon_cat_sort wcs on wcs.cat = coalesce(ws.name || ' ', '') || wt.name || 's'
-order by wcs.idx
-
-select * from wounds;
-
-select sum(sp_head) sp_head, sum(sp_torso) sp_torso, sum(sp_larm) sp_larm, sum(sp_rarm) sp_rarm, sum(sp_lleg) sp_lleg, sum(sp_rleg) sp_rleg
-from armor
-where material || ' ' || type in ('Nylon Helmet','Leather Vest','Medium Kevlar Jacket', 'Light Kevlar Pants')
-
-
-

@@ -22,7 +22,7 @@ def get_globals():
     items['LEVELS'] = query_db('select * from levels')
     items['ROLES'] = query_db('select * from roles')
 
-    items['STATS'] = query_db('select * from stats where type = "primary" order by idx')
+    items['STATS'] = query_db('select * from stats where type in ("primary","secondary") order by idx')
 
     items['WEAPONS'] = query_db('select * from weapons')
 

@@ -17,7 +17,12 @@ def generate_npc(level, role, npc_id, npc_sheets, DB):
     stat_sum = sum(stat_vals.values())
 
     # Generate skills
-    skill_db = query_db(f'select cs.role_id, cs.skill_id, s.stat_id from career_skills cs join skills s on s.skill = cs.skill_id where role_id="{role}"')
+    skill_db = query_db(f'select cs.role_id, cs.skill_id, s.stat_id, cs.alt, cs.alt_no from career_skills cs join skills s on s.id = cs.skill_id where role_id="{role}"')
+    norm_skills = [x for x in skill_db if x['alt'] == None]
+    alt_skills = [x for x in skill_db if x['alt'] != None]
+    if alt_skills != []:
+        alt_skills = random.choices(alt_skills, k=alt_skills[0]['alt_no'])
+    skill_db = norm_skills + alt_skills
     skill_vals = {}
     for skill in skill_db:
         skill_vals[skill['skill_id']] = random.randint(1,100)

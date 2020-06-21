@@ -17,7 +17,7 @@ def update_npcs(keys, form):
 
         skill_vals = {}
         for skill in [x for x in keys if int(x[0]) == npc and x[1] == 'skills']:
-            skill_stat = query_db(f'select stat_id from skills where skill="{skill[2]}"')[0]
+            skill_stat = query_db(f'select stat_id from skills where id="{skill[2]}"')[0]
             skill_vals[skill[2]] = [form['_'.join(skill)], skill_stat[0]]
 
         weapon_vals = []

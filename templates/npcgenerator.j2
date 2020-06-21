@@ -12,7 +12,7 @@
         <select name="0_role">
             <option value="Random">Random</option>
             {% for role in roles %}
-            <option value="{{ role['name'] }}">{{ role['name'] }}</option>
+            <option value="{{ role['id'] }}">{{ role['id'] }}</option>
             {% endfor %}
         </select>
         <button class="w3-button w3-black" type="submit">GENERATE</button>
@@ -193,7 +193,7 @@
                         </tr>
                         <tr style="text-align: center">
                             {% for body_part in bodyparts %}
-                            <td>{{ body_part['body_part'] }}</td>
+                            <td>{{ body_part['id'] }}</td>
                             {% endfor %}
                         </tr>
                         <tr style="text-align: center">

@@ -1,7 +1,7 @@
 from modules.db import query_db
 
 def compute_stats(stat_vals):
-    cstat_db = query_db('select * from stats where type != "primary" or type is null order by idx, idy')
+    cstat_db = query_db('select * from stats where type not in ("primary","secondary") or type is null order by idx, idy')
     cstat_rows = max([cstat['idx'] for cstat in cstat_db])
     cstat_cols = max([cstat['idy'] for cstat in cstat_db])
     cstat_vals = []
@@ -13,12 +13,12 @@ def compute_stats(stat_vals):
                 sub.append(None)
             else:
                 if item[0]['type'] != None and item[0]['multiplier'] != None:
-                    sub.append([item[0]['stat'], item[0]['multiplier'] * stat_vals[item[0]['type']]])
-                elif item[0]['stat'] == 'BTM':
+                    sub.append([item[0]['id'], item[0]['multiplier'] * stat_vals[item[0]['type']]])
+                elif item[0]['id'] == 'BTM':
                     body_type = query_db(f'select * from body_types where pts_from <= {stat_vals["BODY"]} and coalesce(pts_to,"9999") >= {stat_vals["BODY"]}')[0]
-                    sub.append([item[0]['stat'], body_type['modifier']])
+                    sub.append([item[0]['id'], body_type['bt_modifier']])
                 else:
-                    sub.append([item[0]['stat'], 0])
+                    sub.append([item[0]['id'], 0])
         cstat_vals.append(sub)
     return cstat_vals
 
