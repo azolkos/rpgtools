@@ -1,6 +1,6 @@
 import sqlite3, random, math
 from flask import Flask, render_template, g, request
-from modules.db import query_db, get_globals
+from modules.db import get_globals
 from modules.npc_update import update_npcs
 from modules.npc_generate import generate_npc
 
@@ -29,7 +29,7 @@ def npcgenerator():
         # Get current npc sheets
         keys = [x.split('_') for x in request.form.keys()]
 
-        npc_sheets = update_npcs(keys, request.form)
+        npc_sheets = update_npcs(keys, request.form, DB)
 
         if '0_update' not in list(request.form.keys()):
 
@@ -54,7 +54,7 @@ def npcgenerator():
             weapons=DB['WEAPON_NAMES'],
             weapons_cat=DB['WEAPONS_CAT'],
             armor=[DB['ARMOR_HELMET'],DB['ARMOR_JACKET'],DB['ARMOR_VEST'],DB['ARMOR_PANTS']],
-            bodyparts=DB['BODYPARTS'],
+            bodyparts=DB['BODY_PARTS'],
             wounds=DB['WOUNDS'],
             wounds_max=DB['WOUNDS_MAX'],
             wounds_min=DB['WOUNDS_MIN'],

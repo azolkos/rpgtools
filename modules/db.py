@@ -23,6 +23,10 @@ def get_globals():
     items['ROLES'] = query_db('select * from roles')
 
     items['STATS'] = query_db('select * from stats where type in ("primary","secondary") order by idx')
+    items['COMP_STATS'] = query_db('select * from stats where type not in ("primary","secondary") or type is null order by idx, idy')
+
+    items['SKILLS'] = query_db('select * from skills')
+    items['CAREER_SKILLS'] = query_db('select cs.role_id, cs.skill_id, s.stat_id, cs.alt, cs.alt_no from career_skills cs join skills s on s.id = cs.skill_id')
 
     items['WEAPONS'] = query_db('select * from weapons')
 
@@ -42,7 +46,8 @@ def get_globals():
     items['ARMOR_VEST'] = query_db('select * from armor where type="Vest" order by sp_head,sp_torso,sp_larm,sp_lleg')
     items['ARMOR_PANTS'] = query_db('select * from armor where type="Pants" order by sp_head,sp_torso,sp_larm,sp_lleg')
 
-    items['BODYPARTS'] = query_db('select * from body_parts order by idx')
+    items['BODY_PARTS'] = query_db('select * from body_parts order by idx')
+    items['BODY_TYPES'] = query_db('select * from body_types order by pts_from')
 
     # Wounds
     items['WOUNDS'] = query_db('select * from wounds order by stun_save_mod desc')
