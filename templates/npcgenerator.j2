@@ -35,7 +35,7 @@
                         </tr>
                         {% for stat in npc_sheets[npc]['stat_vals'] %}
                         <tr>
-                            <td>{{ stat }}</td>
+                            <td class="tooltip">{{ stat }}<span class="tooltiptext">{{ stats[stat] }}</span></td>
                             <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['stat_vals'][stat] }}" value="{{ npc_sheets[npc]['stat_vals'][stat] }}" required></input>]</td>
                         </tr>
                         {% endfor %}
@@ -48,7 +48,7 @@
                         </tr>
                         {% for skill in npc_sheets[npc]['skill_vals'] %}
                         <tr>
-                            <td class="skill_list_col">{{ skill }}</td>
+                            <td class="tooltip">{{ skill }}<span class="tooltiptext">{{ skills[skill] }}</span></td>
                             <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" value="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" required></input>]</td>
                             {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
                             <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
@@ -69,7 +69,7 @@
                         </tr>
                         {% for weapon in npc_sheets[npc]['weapon_vals'] %}
                         <tr id="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" style="text-align: center">
-                            <td style="text-align: left"><input name="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" type="hidden" value="{{ weapon['name']|replace('"','&quot;') }}">{{ weapon['name'] }}</input></td>
+                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" type="hidden" value="{{ weapon['name']|replace('"','&quot;') }}">{{ weapon['name'] }}<span class="tooltiptext">{{ weapon['info'] }}</span></input></td>
                             <td>{{ weapon['type'] }}</td>
                             <td>{{ weapon['accuracy'] }}</td>
                             <td>{{ weapon['damage'] }}</td>

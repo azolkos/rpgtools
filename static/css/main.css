@@ -47,10 +47,6 @@ input[type=number] {
     width: 3ch
 }
 
-.skill_list_col {
-    width: 200px;
-}
-
 .row_op {
     cursor: default;
     text-align: center;
@@ -59,4 +55,39 @@ input[type=number] {
 .row_op:hover {
     background-color: black;
     color: white;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    padding: 5px 5px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    margin-left: 20px;
+    top: -5px;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 10px;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 9px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    transition-delay: 0.3s;
 }

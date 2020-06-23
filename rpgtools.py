@@ -51,6 +51,8 @@ def npcgenerator():
         return render_template('npcgenerator.j2',
             levels=DB['LEVELS'],
             roles=DB['ROLES'],
+            stats={x['id']: x['info'] for x in DB['STATS']},
+            skills={x['id']: x['info'] for x in DB['SKILLS']},
             weapons=DB['WEAPON_NAMES'],
             weapons_cat=DB['WEAPONS_CAT'],
             armor=[DB['ARMOR_HELMET'],DB['ARMOR_JACKET'],DB['ARMOR_VEST'],DB['ARMOR_PANTS']],
