@@ -55,6 +55,7 @@ def generate_npc(level, role, npc_id, npc_sheets, DB):
             'level': level,
             'handle': '',
             'role': role,
+            'possessions': '',
             'stat_vals': stat_vals,
             'stat_sum': stat_sum,
             'skill_vals': skill_vals,

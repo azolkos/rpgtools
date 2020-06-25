@@ -8,6 +8,7 @@ def update_npcs(keys, form, DB):
         level = form[f'{npc}_level']
         handle = form[f'{npc}_handle']
         role = form[f'{npc}_role']
+        possessions = form[f'{npc}_possessions']
 
         stat_vals = {}
         for stat in [x for x in keys if int(x[0]) == npc and x[1] == 'stats']:
@@ -42,6 +43,7 @@ def update_npcs(keys, form, DB):
                 'level': level,
                 'handle': handle,
                 'role': role,
+                'possessions': possessions,
                 'stat_vals': stat_vals,
                 'stat_sum': stat_sum,
                 'skill_vals': skill_vals,

@@ -219,6 +219,18 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="40">
+                    <table>
+                        <tr>
+                            <td class="npc_section_header">POSSESSIONS</td>
+                        </tr>
+                        <tr>
+                            <td><input name="{{ npc }}_possessions" type="text" style="width: 100%; border: none; height: 20px;" placeholder="List of possessions" value="{{ npc_sheets[npc]['possessions'] }}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
                 {% for wound in wounds %}
                 <td colspan="4" id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}" class="wound_type">{{ wound['abr'] }} {{ wound['stun_save_mod'] }}</td>
                 {% endfor %}
