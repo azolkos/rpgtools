@@ -15,6 +15,9 @@ def compute_stats(stat_vals, DB):
                 elif item[0]['id'] == 'BTM':
                     body_type = [x for x in DB['BODY_TYPES'] if x['pts_from'] <= stat_vals['BODY'] and (x['pts_to'] or 99) >= stat_vals['BODY']][0]
                     sub.append([item[0]['id'], body_type['bt_modifier']])
+                elif item[0]['id'] == 'DMG':
+                    body_type = [x for x in DB['BODY_TYPES'] if x['pts_from'] <= stat_vals['BODY'] and (x['pts_to'] or 99) >= stat_vals['BODY']][0]
+                    sub.append([item[0]['id'], body_type['dmg_modifier']])
                 else:
                     sub.append([item[0]['id'], 0])
         cstat_vals.append(sub)
