@@ -8,10 +8,10 @@
     <meta name="Author" content="Artur Żółkoś" />
     <meta http-equiv="Creation-Date" content="Wed, 3 Jun 2020 12:35:19 GMT" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"> -->
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 
     <!-- External CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <!-- Scripts -->
-    <script src="{{ url_for('static', filename='javascript/main.js') }}"></script>
+    <script src="{% static 'main.js' %}"></script>
 
     <title>Cyberpuk Tools</title>
 </head>
@@ -32,8 +32,8 @@
     <div class="w3-top">
         <div class="w3-bar w3-black w3-card">
             <span class="w3-bar-item">Cyberpunk Tools</span>
-            <a class="w3-bar-item w3-button w3-hover-red" href="/">Home</a>
-            <a class="w3-bar-item w3-button w3-hover-red" href="/npcgenerator">NPC Generator</a>
+            <a class="w3-bar-item w3-button w3-hover-red" href="/tinfoilpunk">Home</a>
+            <a class="w3-bar-item w3-button w3-hover-red" href="/tinfoilpunk/npcgenerator">NPC Generator</a>
         </div>
     </div>
 

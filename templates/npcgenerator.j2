@@ -2,41 +2,43 @@
 
 {% block content %}
     {# Input parameters #}
-     <form action="/npcgenerator" method="POST">
+    <form action="" method="POST">
+    {% csrf_token %}
         <select name="0_level">
             <option value="Random">Random</option>
             {% for level in levels %}
-            <option value="{{ level['id'] }}">{{ level['id'] }}</option>
+            <option value="{{ level.id }}">{{ level.id }}</option>
             {% endfor %}
         </select>
         <select name="0_role">
             <option value="Random">Random</option>
             {% for role in roles %}
-            <option value="{{ role['id'] }}">{{ role['id'] }}</option>
+            <option value="{{ role.id }}">{{ role.id }}</option>
             {% endfor %}
         </select>
-        <button class="w3-button w3-black" type="submit">GENERATE</button>
-        <input name="0_update" class="w3-button w3-black w3-right" type="submit" value="update"></input>
-    
+        <button name="0_submit" class="w3-button w3-black" type="submit" value="generate">GENERATE</button>
+        <button name="0_submit" class="w3-button w3-black w3-right" type="submit" value="update">UPDATE</button>
+
         {# NPC character sheets #}
-        {% for npc in npc_sheets %}
+        {% for npc, data in npc_sheets.items %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
-                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ npc_sheets[npc]['handle'] }}"></td>
-                <td colspan="4" style="vertical-align: middle"><input name="{{ npc }}_level" type="hidden" value="{{ npc_sheets[npc]['level'] }}">{{ npc_sheets[npc]['level'] }}</td>
-                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ npc_sheets[npc]['role'] }}">{{ npc_sheets[npc]['role'] }}</input></td>
-                <td colspan="16" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
+                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.handle }}"></td>
+                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_level" type="hidden" value="{{ data.level }}">{{ data.level }}</td>
+                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ data.role }}">{{ data.role }}</input></td>
+                <td colspan="12" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
             </tr>
             <tr>
                 <td colspan="6">
                     <table>
                         <tr>
-                            <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ npc_sheets[npc]['stat_sum'] }})</td>
+                            <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ data.stat_sum }})</td>
                         </tr>
-                        {% for stat in npc_sheets[npc]['stat_vals'] %}
+                        {% for stat, val in data.stat_vals.items %}
+                        {% load get_item %}
                         <tr>
-                            <td class="tooltip">{{ stat }}<span class="tooltiptext">{{ stats[stat] }}</span></td>
-                            <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['stat_vals'][stat] }}" value="{{ npc_sheets[npc]['stat_vals'][stat] }}" required></input>]</td>
+                            <td class="tooltip">{{ stat }}<span class="tooltiptext">{{ stats|get_item:stat }}</span></td>
+                            <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ val }}" value="{{ val }}" required></input>]</td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -46,12 +48,12 @@
                         <tr>
                             <td colspan="3" class="npc_section_header">SKILLS</td>
                         </tr>
-                        {% for skill in npc_sheets[npc]['skill_vals'] %}
+                        {% for skill, val in data.skill_vals.items %}
                         <tr>
-                            <td class="tooltip">{{ skill }}<span class="tooltiptext">{{ skills[skill] }}</span></td>
-                            <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" value="{{ npc_sheets[npc]['skill_vals'][skill][0] }}" required></input>]</td>
-                            {% if npc_sheets[npc]['skill_vals'][skill][1] != None %}
-                            <td>({{ npc_sheets[npc]['skill_vals'][skill][1] }})</td>
+                            <td class="tooltip">{{ skill }}<span class="tooltiptext">{{ val.2 }}</span></td>
+                            <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ val.0 }}" value="{{ val.0 }}" required></input>]</td>
+                            {% if val.1 != None %}
+                            <td>({{ val.1 }})</td>
                             {% endif %}
                         </tr>
                         {% endfor %}
@@ -67,28 +69,28 @@
                             <td style="text-align: center">#/rof</td>
                             <td style="text-align: center">rel</td>
                         </tr>
-                        {% for weapon in npc_sheets[npc]['weapon_vals'] %}
-                        <tr id="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" style="text-align: center">
-                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}" type="hidden" value="{{ weapon['name']|replace('"','&quot;') }}">{{ weapon['name'] }}<span class="tooltiptext">{{ weapon['info'] }}</span></input></td>
-                            <td>{{ weapon['type'] }}</td>
-                            <td>{{ weapon['accuracy'] }}</td>
-                            <td>{{ weapon['damage'] }}</td>
-                            <td>{{ weapon['shots'] }}/{{ weapon['rof'] }}</td>
-                            <td>{{ weapon['reliability'] }}</td>
-                            <td class="row_op" onClick="remove_weapon('{{ npc }}_weapon_{{ weapon['name']|replace('"','&quot;') }}')">-</td>
+                        {% for weapon in data.weapon_vals %}
+                        <tr id="{{ npc }}_weapon_{{ weapon.id|escape }}" style="text-align: center">
+                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_weapon_{{ weapon.id|escape }}" type="hidden" value="{{ weapon.id|escape }}">{{ weapon.id }}<span class="tooltiptext">{{ weapon.info }}</span></input></td>
+                            <td>{{ weapon.w_type }}</td>
+                            <td>{{ weapon.accuracy }}</td>
+                            <td>{{ weapon.damage }}</td>
+                            <td>{{ weapon.shots }}/{{ weapon.rof }}</td>
+                            <td>{{ weapon.w_reliability }}</td>
+                            <td class="row_op" onClick="remove_weapon('{{ npc }}_weapon_{{ weapon.id|escape }}')">-</td>
                         </tr>
                         {% endfor %}
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
                             <td colspan="6">
                                 <select name="{{ npc }}_weapon_1">
                                         <option value="None">None</option>
-                                    {% for cat in weapons_cat %}
-                                        <optgroup label="{{ cat['cat'] }}">
-                                            {% for weapon in weapons if weapon['cat'] == cat['cat'] %}
-                                                <option value="{{ weapon['name']|replace('"','&quot;') }}">{{ weapon['name'] }}</option>
+                                    {# {% for cat in weapons_cat %} #}
+                                        {# <optgroup label="{{ cat.cat }}"> #}
+                                            {% for weapon in weapons %}
+                                                <option value="{{ weapon.id|escape }}">{{ weapon.id }}</option>
                                             {% endfor %}
-                                        </optgroup>
-                                    {% endfor %}
+                                        {# </optgroup> #}
+                                    {# {% endfor %} #}
                                 </select>
                             </td>
                         </tr>
@@ -114,24 +116,24 @@
                             <td colspan="3">
                                 <select name="{{ npc }}_armor_helmet" style="width: 100%">
                                     <option value="None">None</option>
-                                    {% for piece in armor[0] %}
-                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
-                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][0]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][0]['type'] %}
+                                    {% for piece in armor.0 %}
+                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
+                                        {% if piece.material_id == data.armor_vals.0.material_id and piece.part_id == data.armor_vals.0.part_id %}
                                         selected="selected"
                                         {% endif %}
-                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
                             </td>
                             <td colspan="3">
                                 <select name="{{ npc }}_armor_jacket" style="width: 100%">
                                     <option value="None">None</option>
-                                    {% for piece in armor[1] %}
-                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
-                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][1]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][1]['type'] %}
+                                    {% for piece in armor.1 %}
+                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
+                                        {% if piece.material_id == data.armor_vals.1.material_id and piece.part_id == data.armor_vals.1.part_id %}
                                         selected="selected"
                                         {% endif %}
-                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -140,24 +142,24 @@
                             <td colspan="3">
                                 <select name="{{ npc }}_armor_vest" style="width: 100%">
                                     <option value="None">None</option>
-                                    {% for piece in armor[2] %}
-                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
-                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][2]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][2]['type'] %}
+                                    {% for piece in armor.2 %}
+                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
+                                        {% if piece.material_id == data.armor_vals.2.material_id and piece.part_id == data.armor_vals.2.part_id %}
                                         selected="selected"
                                         {% endif %}
-                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
                             </td>
                             <td colspan="3">
                                 <select name="{{ npc }}_armor_pants" style="width: 100%">
                                     <option value="None">None</option>
-                                    {% for piece in armor[3] %}
-                                    <option value="{{ piece['material'] }} {{ piece['type'] }}"
-                                        {% if piece['material'] == npc_sheets[npc]['armor_vals'][3]['material'] and piece['type'] == npc_sheets[npc]['armor_vals'][3]['type'] %}
+                                    {% for piece in armor.3 %}
+                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
+                                        {% if piece.material_id == data.armor_vals.3.material_id and piece.part_id == data.armor_vals.3.part_id %}
                                         selected="selected"
                                         {% endif %}
-                                    >{{ piece['material'] }} {{ piece['type'] }}</option>
+                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -171,12 +173,12 @@
                         <tr>
                             <td colspan="6" class="npc_section_header">COMPUTED STATS</td>
                         </tr>
-                        {% for row in npc_sheets[npc]['cstat_vals'] %}
+                        {% for row in data.cstat_vals %}
                         <tr>
                             {% for col in row %}
                                 {% if col != None %}
-                                    <td>{{ col[0] }}</td>
-                                    <td>[{{ col[1] }}]</td>
+                                    <td>{{ col.0 }}</td>
+                                    <td>[{{ col.1 }}]</td>
                                 {% else %}
                                     <td></td>
                                     <td></td>
@@ -193,27 +195,27 @@
                         </tr>
                         <tr style="text-align: center">
                             {% for body_part in bodyparts %}
-                            <td>{{ body_part['id'] }}</td>
+                            <td>{{ body_part.id }}</td>
                             {% endfor %}
                         </tr>
                         <tr style="text-align: center">
                             {% for body_part in bodyparts %}
                             <td>
-                                {% if body_part['d_from'] != body_part['d_to'] %}
-                                    {{ body_part['d_from'] }}-{{ body_part['d_to'] }}
+                                {% if body_part.d_from != body_part.d_to %}
+                                    {{ body_part.d_from }}-{{ body_part.d_to }}
                                 {% else %}
-                                    {{ body_part['d_from'] }}
+                                    {{ body_part.d_from }}
                                 {% endif %}
                             </td>
                             {% endfor %}
                         </tr>
                         <tr style="text-align: center">
-                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_head'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_torso'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_larm'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_rarm'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_lleg'] }}]</td>
-                            <td>[{{ npc_sheets[npc]['armor_sp']['sp_rleg'] }}]</td>
+                            <td>[{{ data.armor_sp.sp_head }}]</td>
+                            <td>[{{ data.armor_sp.sp_torso }}]</td>
+                            <td>[{{ data.armor_sp.sp_larm }}]</td>
+                            <td>[{{ data.armor_sp.sp_rarm }}]</td>
+                            <td>[{{ data.armor_sp.sp_lleg }}]</td>
+                            <td>[{{ data.armor_sp.sp_rleg }}]</td>
                         </tr>
                     </table>
                 </td>
@@ -225,26 +227,26 @@
                             <td class="npc_section_header">POSSESSIONS</td>
                         </tr>
                         <tr>
-                            <td><input name="{{ npc }}_possessions" type="text" style="width: 100%; border: none; height: 20px;" placeholder="List of possessions" value="{{ npc_sheets[npc]['possessions'] }}"></td>
+                            <td><input name="{{ npc }}_possessions" type="text" style="width: 100%; border: none; height: 20px;" placeholder="List of possessions" value="{{ data.possessions }}"></td>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
                 {% for wound in wounds %}
-                <td colspan="4" id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}" class="wound_type">{{ wound['abr'] }} {{ wound['stun_save_mod'] }}</td>
+                <td colspan="4" id="{{ npc }}_wound_{{ wound.stun_save_mod }}" class="wound_type">{{ wound.short }} {{ wound.stun_save_mod }}</td>
                 {% endfor %}
             </tr>
             <tr>
                 {% for wound in wounds %}
-                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_1" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_2" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_3" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
-                <td id="{{ npc }}_wound_{{ wound['stun_save_mod'] }}_4" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound.stun_save_mod }}_1" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound.stun_save_mod }}_2" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound.stun_save_mod }}_3" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
+                <td id="{{ npc }}_wound_{{ wound.stun_save_mod }}_4" class="wound_hitbox" onclick="updateHitbox(this.id, {{ wounds_max }}, {{ wounds_min }})"></td>
                 {% endfor %}
             </tr>
         </table>
         {% endfor %}
-    </form>
 
+    </form>
 {% endblock %}
