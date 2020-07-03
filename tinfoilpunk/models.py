@@ -1,6 +1,12 @@
 from django.db import models
 
 # Create your models here.
+class Race(models.Model):
+    def __str__(self):
+        return self.id
+    id = models.CharField(max_length=20, primary_key=True)
+    info = models.TextField()
+
 class Level(models.Model):
     def __str__(self):
         return self.id
@@ -22,6 +28,13 @@ class Stat(models.Model):
     category = models.CharField(max_length=20, null=True, blank=True)
     multiplier = models.FloatField(null=True, blank=True)
     info = models.TextField(null=True, blank=True)
+
+class RaceBonus(models.Model):
+    def __str__(self):
+        return self.id
+    race = models.ForeignKey(Race, models.CASCADE)
+    stat = models.ForeignKey(Stat, models.CASCADE)
+    modifier = models.IntegerField()
 
 class BodyType(models.Model):
     def __str__(self):
