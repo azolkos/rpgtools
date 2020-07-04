@@ -46,6 +46,9 @@ def generate_npc(level, role, npc_id, npc_sheets, data):
     armor_vals_3 = armor_db_3.order_by('?').first()
     armor_vals_4 = armor_db_4.order_by('?').first()
 
+    # Generate tinfoilware
+    tinfoilware_vals = data['TINFOILWARE'].order_by('?')[:1]
+
     # Compute armor sp
     armor_sp = compute_armorsp([armor_vals_1, armor_vals_2, armor_vals_3, armor_vals_4])
 
@@ -62,6 +65,7 @@ def generate_npc(level, role, npc_id, npc_sheets, data):
         'skill_vals': skill_vals,
         'weapon_vals': weapon_vals,
         'armor_vals': [armor_vals_1, armor_vals_2, armor_vals_3, armor_vals_4],
+        'tinfoilware_vals': tinfoilware_vals,
         'armor_sp': armor_sp,
         'cstat_vals': cstat_vals
     }

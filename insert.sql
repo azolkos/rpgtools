@@ -1,5 +1,13 @@
 pragma foreign_keys = 'on';
 
+-- Race
+insert into tinfoilpunk_race (id,info) values ('Aryan','Pure bred Germanic people');
+insert into tinfoilpunk_race (id,info) values ('Slavic','Eastern European descendants of the Great Lechia Empire');
+insert into tinfoilpunk_race (id,info) values ('Caucasian','Standard white men');
+insert into tinfoilpunk_race (id,info) values ('Asian','Oriental people from the far East');
+insert into tinfoilpunk_race (id,info) values ('Arabic','People descended from the Middle East');
+insert into tinfoilpunk_race (id,info) values ('African','Dark skinned people descending from the Pharaohs');
+
 -- Levels
 insert into tinfoilpunk_level (id,lvl) values ('Weak',1);
 insert into tinfoilpunk_level (id,lvl) values ('Average',2);
@@ -39,6 +47,29 @@ insert into tinfoilpunk_stat (id,idx,idy,category,multiplier,info) values ('LIFT
 insert into tinfoilpunk_stat (id,idx,idy,category,multiplier,info) values ('DMG',1,3,null,3,'Compute damage bonus from BODY for use in melee weapons.');
 insert into tinfoilpunk_stat (id,idx,idy,category,multiplier,info) values ('SAVE',2,3,'BODY',1,'Your character''s Save Number is a value equal to your Body Type. To make saves, you must roll a value on 1D10 equal or lower than this number.');
 insert into tinfoilpunk_stat (id,idx,idy,category,multiplier,info) values ('BTM',3,3,'BODY',null,'Not all people take damage the same way. For example, it takes a lot more damage to stop Arnold The Terminator than it does Arnold The Nerd. This is reflected by the Body Type Modifier, a special bonus used by your character to reduce the effects of damage. The Body type modifier is subtracted from any damage your character takes in combat.');
+
+-- Race bonuses
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Asian','INT',2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Asian','TECH',1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Asian','BODY',-2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('African','BODY',2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('African','INT',-1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('African','WIS',-2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Arabic','MA',1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Arabic','WIS',1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Arabic','TECH',-1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Arabic','BODY',-1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Slavic','COOL',2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Slavic','INT',1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Slavic','WIS',-3);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Slavic','CHAR',-2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Slavic','BODY',-1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Slavic','REF',-1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','CHAR',2);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','WIS',1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','INT',1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','MA',-1);
+insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','REF',-1);
 
 -- Body types
 insert into tinfoilpunk_bodytype (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Very Weak',1,2,0,-2);

@@ -29,6 +29,14 @@ def update_npcs(keys, form, data):
                 if row != []:
                     weapon_vals.append(row)
 
+        tinfoilware_vals = []
+        for tinfoil in [x for x in keys if len(x) != 1 and int(x[0]) == npc and x[1] == 'tinfoil']:
+            t_id = form['_'.join(tinfoil)]
+            t_db = [x for x in data['TINFOILWARE'] if x.id == t_id]
+            for row in t_db:
+                if row != []:
+                    tinfoilware_vals.append(row)
+
         armor_parts = ['helmet', 'jacket', 'vest', 'pants']
         armor_vals = []
         for armor in armor_parts:
@@ -49,6 +57,7 @@ def update_npcs(keys, form, data):
             'stat_sum': stat_sum,
             'skill_vals': skill_vals,
             'weapon_vals': weapon_vals,
+            'tinfoilware_vals': tinfoilware_vals,
             'armor_vals': armor_vals,
             'armor_sp': armor_sp,
             'cstat_vals': cstat_vals

@@ -31,7 +31,7 @@ class Stat(models.Model):
 
 class RaceBonus(models.Model):
     def __str__(self):
-        return self.id
+        return self.race.id + ': ' + self.stat.id
     race = models.ForeignKey(Race, models.CASCADE)
     stat = models.ForeignKey(Stat, models.CASCADE)
     modifier = models.IntegerField()
@@ -148,3 +148,10 @@ class Armor(models.Model):
     sp_rleg = models.IntegerField()
     ev = models.IntegerField()
     cost = models.IntegerField(null=True, blank=True)
+
+class Tinfoilware(models.Model):
+    def __str__(self):
+        return self.id
+    id = models.CharField(max_length=40, primary_key=True)
+    category = models.CharField(max_length=40, null=True, blank=True)
+    info = models.TextField()

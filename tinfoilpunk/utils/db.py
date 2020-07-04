@@ -1,4 +1,4 @@
-from tinfoilpunk.models import Level, Role, Stat, Skill, CareerSkill, Weapon, Armor, BodyPart, BodyType, Wound
+from tinfoilpunk.models import Level, Role, Stat, Skill, CareerSkill, Weapon, Armor, BodyPart, BodyType, Wound, Tinfoilware
 
 def get_globals():
     items = {}
@@ -38,5 +38,7 @@ def get_globals():
     items['WOUNDS'] = Wound.objects.order_by('-stun_save_mod')
     items['WOUNDS_MAX'] = max([x.stun_save_mod for x in items['WOUNDS']])
     items['WOUNDS_MIN'] = min([x.stun_save_mod for x in items['WOUNDS']])
+
+    items['TINFOILWARE'] = Tinfoilware.objects.all()
 
     return items

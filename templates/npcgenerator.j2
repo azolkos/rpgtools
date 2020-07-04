@@ -77,7 +77,7 @@
                             <td>{{ weapon.damage }}</td>
                             <td>{{ weapon.shots }}/{{ weapon.rof }}</td>
                             <td>{{ weapon.w_reliability }}</td>
-                            <td class="row_op" onClick="remove_weapon('{{ npc }}_weapon_{{ weapon.id|escape }}')">-</td>
+                            <td class="row_op" onClick="remove_id('{{ npc }}_weapon_{{ weapon.id|escape }}')">-</td>
                         </tr>
                         {% endfor %}
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
@@ -97,15 +97,33 @@
                     </table>
                     <table>
                         <tr>
-                            <td class="row_op" onClick="add_weapon_select({{ npc }})">+</td>
+                            <td class="row_op" onClick="add_select({{ npc }}, 'weapon')">+</td>
+                        </tr>
+                    </table>
+                    <table id="{{ npc }}_tinfoil_table">
+                        <tr>
+                            <td class="npc_section_header">TINFOILWARE</td>
+                        </tr>
+                        {% for tinfoil in data.tinfoilware_vals %}
+                        <tr id="{{ npc }}_tinfoil_{{ tinfoil.id|escape }}">
+                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_tinfoil_{{ tinfoil.id|escape }}" type="hidden" value="{{ tinfoil.id|escape }}">{{ tinfoil.id }}<span class="tooltiptext">{{ tinfoil.info }}</span></input></td>
+                            <td class="row_op" onClick="remove_id('{{ npc }}_tinfoil_{{ tinfoil.id|escape }}')">-</td>
+                        </tr>
+                        {% endfor %}
+                        <tr id="{{ npc }}_tinfoilselect_1" style="display: none">
+                            <td>
+                                <select name="{{ npc }}_tinfoil_1">
+                                    <option value="None">None</option>
+                                    {% for tinfoil in tinfoilware %}
+                                        <option value="{{ tinfoil.id|escape }}">{{ tinfoil.id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
                         </tr>
                     </table>
                     <table>
                         <tr>
-                            <td class="npc_section_header">CYBERWARE</td>
-                        </tr>
-                        <tr>
-                            <td>Some name of cyberware</td>
+                            <td class="row_op" onClick="add_select({{ npc }}, 'tinfoil')">+</td>
                         </tr>
                     </table>
                     <table>

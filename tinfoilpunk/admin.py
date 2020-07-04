@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Race, Level, Role, Stat, RaceBonus, BodyType, BodyPart, Skill, CareerSkill, Wound, WeaponType, WeaponConcealability, WeaponAvailability, WeaponReliability, WeaponSubtype, Weapon, ArmorPart, ArmorMaterial, Armor
+from .models import Race, Level, Role, Stat, RaceBonus, BodyType, BodyPart, Skill, CareerSkill, Wound, WeaponType, WeaponConcealability, WeaponAvailability, WeaponReliability, WeaponSubtype, Weapon, ArmorPart, ArmorMaterial, Armor, Tinfoilware
 
 # Register your models here.
 admin.site.register(Race)
@@ -21,3 +21,4 @@ admin.site.register(Weapon)
 admin.site.register(ArmorPart)
 admin.site.register(ArmorMaterial)
 admin.site.register(Armor)
+admin.site.register(Tinfoilware)
