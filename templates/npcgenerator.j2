@@ -4,6 +4,12 @@
     {# Input parameters #}
     <form action="" method="POST">
     {% csrf_token %}
+        <select name="0_race">
+            <option value="Random">Random</option>
+            {% for race in races %}
+            <option value="{{ race.id }}">{{ race.id }}</option>
+            {% endfor %}
+        </select>
         <select name="0_level">
             <option value="Random">Random</option>
             {% for level in levels %}
@@ -24,8 +30,9 @@
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
                 <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.handle }}"></td>
+                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_race" type="hidden" value="{{ data.race }}">{{ data.race }}</td>
                 <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_level" type="hidden" value="{{ data.level }}">{{ data.level }}</td>
-                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ data.role }}">{{ data.role }}</input></td>
+                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ data.role }}">{{ data.role }}</td>
                 <td colspan="12" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
             </tr>
             <tr>

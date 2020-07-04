@@ -8,6 +8,7 @@ def update_npcs(keys, form, data):
         level = form[f'{npc}_level']
         handle = form[f'{npc}_handle']
         role = form[f'{npc}_role']
+        race = form[f'{npc}_race']
         possessions = form[f'{npc}_possessions']
 
         stat_vals = {}
@@ -52,6 +53,7 @@ def update_npcs(keys, form, data):
             'level': level,
             'handle': handle,
             'role': role,
+            'race': race,
             'possessions': possessions,
             'stat_vals': stat_vals,
             'stat_sum': stat_sum,

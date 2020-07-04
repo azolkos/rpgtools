@@ -1,9 +1,11 @@
-from tinfoilpunk.models import Level, Role, Stat, Skill, CareerSkill, Weapon, Armor, BodyPart, BodyType, Wound, Tinfoilware
+from tinfoilpunk.models import Race, Level, Role, Stat, RaceBonus, Skill, CareerSkill, Weapon, Armor, BodyPart, BodyType, Wound, Tinfoilware
 
 def get_globals():
     items = {}
 
     items['LEVELS'] = Level.objects.order_by('lvl')
+    items['RACES'] = Race.objects.order_by('id')
+    items['RACEBONUS'] = RaceBonus.objects.all()
     items['ROLES'] = Role.objects.order_by('id')
 
     items['STATS'] = Stat.objects.filter(category__in=['primary', 'secondary']).order_by('idx')

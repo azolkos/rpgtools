@@ -21,6 +21,11 @@ def npcgenerator(request):
         npc_sheets = update_npcs(keys, request.POST, data)
 
         if request.POST['0_submit'] == 'generate':
+            # Get Race
+            race = request.POST['0_race']
+            if race == 'Random':
+                race = random.choice(data['RACES'])
+            
             # Get level
             level = request.POST['0_level']
             if level == 'Random':
@@ -34,11 +39,12 @@ def npcgenerator(request):
             # Get new npc_id
             npc_id = int(max([x[0] for x in keys if len(x) != 1])) + 1
 
-            npc_sheets = generate_npc(level, role, npc_id, npc_sheets, data)
+            npc_sheets = generate_npc(level, role, race, npc_id, npc_sheets, data)
 
         return render(request, 'npcgenerator.j2', {
             'levels': data['LEVELS'],
             'roles': data['ROLES'],
+            'races': data['RACES'],
             'stats': {x.id: x.info for x in data['STATS']},
             'skills': data['SKILLS'],
             'weapons': data['WEAPONS'],

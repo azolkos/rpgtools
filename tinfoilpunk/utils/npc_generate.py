@@ -2,7 +2,7 @@ import random
 import math
 from .npc_compute import compute_stats, compute_armorsp
 
-def generate_npc(level, role, npc_id, npc_sheets, data):
+def generate_npc(level, role, race, npc_id, npc_sheets, data):
 
     # Generate primary stats
     stat_db = data['STATS']
@@ -13,7 +13,8 @@ def generate_npc(level, role, npc_id, npc_sheets, data):
         while d6_1 + d6_2 >= 11:
             d6_1 = random.randint(1, 6)
             d6_2 = random.randint(1, 6)
-        stat_vals[stat.id] = d6_1+d6_2
+        bonus = data['RACEBONUS'].filter(race_id__exact=race, stat_id__exact=stat.id).first()
+        stat_vals[stat.id] = d6_1+d6_2 + (bonus.modifier if bonus else 0)
     stat_sum = sum(stat_vals.values())
 
     # Generate skills
@@ -59,6 +60,7 @@ def generate_npc(level, role, npc_id, npc_sheets, data):
         'level': level,
         'handle': '',
         'role': role,
+        'race': race,
         'possessions': '',
         'stat_vals': stat_vals,
         'stat_sum': stat_sum,
