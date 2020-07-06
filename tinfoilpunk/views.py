@@ -13,7 +13,7 @@ def npcgenerator(request):
     data = get_globals()
 
     if request.method == 'GET':
-        return render(request, 'npcgenerator.j2', {'levels': data['LEVELS'], 'roles': data['ROLES']})
+        return render(request, 'npcgenerator.j2', {'races': data['RACES'], 'levels': data['LEVELS'], 'roles': data['ROLES']})
 
     if request.method == 'POST':
 
