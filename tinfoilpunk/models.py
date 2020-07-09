@@ -36,6 +36,9 @@ class RaceBonus(models.Model):
     stat = models.ForeignKey(Stat, models.CASCADE)
     modifier = models.IntegerField()
 
+    class Meta:
+        verbose_name_plural = "Race Bonuses"
+
 class BodyType(models.Model):
     def __str__(self):
         return self.id
@@ -45,6 +48,9 @@ class BodyType(models.Model):
     bt_modifier = models.IntegerField()
     dmg_modifier = models.IntegerField()
 
+    class Meta:
+        verbose_name_plural = "Body Types"
+
 class BodyPart(models.Model):
     def __str__(self):
         return self.id
@@ -52,6 +58,9 @@ class BodyPart(models.Model):
     idx = models.IntegerField()
     d_from = models.IntegerField()
     d_to = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "Body Parts"
 
 class Skill(models.Model):
     def __str__(self):
@@ -68,6 +77,9 @@ class CareerSkill(models.Model):
     alt = models.IntegerField(null=True, blank=True)
     alt_no = models.IntegerField(null=True, blank=True)
 
+    class Meta:
+        verbose_name_plural = "Career Skills"
+
 class Wound(models.Model):
     def __str__(self):
         return self.id
@@ -81,11 +93,17 @@ class WeaponType(models.Model):
     id = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=30)
 
+    class Meta:
+        verbose_name_plural = "Weapon Types"
+
 class WeaponConcealability(models.Model):
     def __str__(self):
         return self.id
     id = models.CharField(max_length=1, primary_key=True)
     name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name_plural = "Weapon Concealabilities"
 
 class WeaponAvailability(models.Model):
     def __str__(self):
@@ -94,17 +112,26 @@ class WeaponAvailability(models.Model):
     name = models.CharField(max_length=20)
     info = models.CharField(max_length=100)
 
+    class Meta:
+        verbose_name_plural = "Weapon Availabilities"
+
 class WeaponReliability(models.Model):
     def __str__(self):
         return self.id
     id = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=20)
 
+    class Meta:
+        verbose_name_plural = "Weapon Reliabilities"
+
 class WeaponSubtype(models.Model):
     def __str__(self):
         return self.id
     id = models.CharField(max_length=1, primary_key=True)
     name = models.CharField(max_length=20)
+
+    class Meta:
+        verbose_name_plural = "Weapon Subtypes"
 
 class Weapon(models.Model):
     def __str__(self):
@@ -129,11 +156,17 @@ class ArmorPart(models.Model):
         return self.id
     id = models.CharField(max_length=20, primary_key=True)
 
+    class Meta:
+        verbose_name_plural = "Armor Parts"
+
 class ArmorMaterial(models.Model):
     def __str__(self):
         return self.id
     id = models.CharField(max_length=30, primary_key=True)
     lvl = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "Armor Materials"
 
 class Armor(models.Model):
     def __str__(self):
@@ -155,3 +188,66 @@ class Tinfoilware(models.Model):
     id = models.CharField(max_length=40, primary_key=True)
     category = models.CharField(max_length=40, null=True, blank=True)
     info = models.TextField()
+
+    class Meta:
+        verbose_name_plural = "Tinfoilware"
+
+# NPC
+class Npc(models.Model):
+    def __str__(self):
+        return '[' + str(self.id) + '] ' + self.handle + ': ' + self.level.id + ' ' + self.race.id + ' ' + self.role.id
+    handle = models.CharField(max_length=100)
+    level = models.ForeignKey(Level, models.CASCADE)
+    race = models.ForeignKey(Race, models.CASCADE)
+    role = models.ForeignKey(Role, models.CASCADE)
+    possessions = models.TextField(null=True, blank=True)
+
+class NpcStat(models.Model):
+    def __str__(self):
+        return '[' + str(self.npc.id) + '] ' + self.npc.handle + ': ' + self.npc.level.id + ' ' + self.npc.race.id + ' ' + self.npc.role.id + ' | ' + self.stat.id
+    npc = models.ForeignKey(Npc, models.CASCADE)
+    stat = models.ForeignKey(Stat, models.CASCADE)
+    value = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "Npc Stats"
+        unique_together = (('npc', 'stat'),)
+
+class NpcSkill(models.Model):
+    def __str__(self):
+        return '[' + str(self.npc.id) + '] ' + self.npc.handle + ': ' + self.npc.level.id + ' ' + self.npc.race.id + ' ' + self.npc.role.id + ' | ' + self.skill.id
+    npc = models.ForeignKey(Npc, models.CASCADE)
+    skill = models.ForeignKey(Skill, models.CASCADE)
+    value = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "Npc Skills"
+        unique_together = (('npc', 'skill'),)
+
+class NpcWeapon(models.Model):
+    def __str__(self):
+        return '[' + str(self.npc.id) + '] ' + self.npc.handle + ': ' + self.npc.level.id + ' ' + self.npc.race.id + ' ' + self.npc.role.id + ' | ' + self.weapon.id
+    npc = models.ForeignKey(Npc, models.CASCADE)
+    weapon = models.ForeignKey(Weapon, models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Npc Weapons"
+
+class NpcTinfoilware(models.Model):
+    def __str__(self):
+        return '[' + str(self.npc.id) + '] ' + self.npc.handle + ': ' + self.npc.level.id + ' ' + self.npc.race.id + ' ' + self.npc.role.id + ' | ' + self.tinfoilware.id
+    npc = models.ForeignKey(Npc, models.CASCADE)
+    tinfoilware = models.ForeignKey(Tinfoilware, models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Npc Tinfoilware"
+
+class NpcArmor(models.Model):
+    def __str__(self):
+        return '[' + str(self.npc.id) + '] ' + self.npc.handle + ': ' + self.npc.level.id + ' ' + self.npc.race.id + ' ' + self.npc.role.id + ' | ' + self.armor.material.id + ' ' + self.armor.part.id
+    npc = models.ForeignKey(Npc, models.CASCADE)
+    armor = models.ForeignKey(Armor, models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Npc Armor"
+        unique_together = (('npc', 'armor'),)

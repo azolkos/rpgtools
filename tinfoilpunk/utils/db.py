@@ -1,4 +1,7 @@
-from tinfoilpunk.models import Race, Level, Role, Stat, RaceBonus, Skill, CareerSkill, Weapon, Armor, BodyPart, BodyType, Wound, Tinfoilware
+from tinfoilpunk.models import (Armor, ArmorPart, BodyPart, BodyType, CareerSkill, Level,
+                                Race, RaceBonus, Role, Skill, Stat,
+                                Tinfoilware, Weapon, Wound)
+
 
 def get_globals():
     items = {}
@@ -27,6 +30,8 @@ def get_globals():
     # ''')
 
     # items['WEAPONS_CAT'] = query_db('select * from weapon_cat_sort order by idx')
+    items['ARMOR_PARTS'] = ArmorPart.objects.all()
+    items['ARMOR'] = Armor.objects.all()
 
     items['ARMOR_HELMET'] = Armor.objects.filter(part_id__exact='Helmet').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
     items['ARMOR_JACKET'] = Armor.objects.filter(part_id__exact='Jacket').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
