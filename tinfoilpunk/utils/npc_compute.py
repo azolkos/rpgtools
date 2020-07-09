@@ -1,4 +1,4 @@
-def compute_stats(stat_vals, data):
+def compute_stats(npc_stats, data):
     cstat_db = data['COMP_STATS']
     cstat_rows = max([cstat.idx for cstat in cstat_db])
     cstat_cols = max([cstat.idy for cstat in cstat_db])
@@ -10,25 +10,28 @@ def compute_stats(stat_vals, data):
             if item == []:
                 sub.append(None)
             else:
-                if item[0].category is not None and item[0].multiplier is not None:
-                    sub.append([item[0].id, item[0].multiplier * stat_vals[item[0].category]])
-                elif item[0].id == 'BTM':
-                    body_type = [x for x in data['BODY_TYPES'] if x.pts_from <= stat_vals['BODY'] and (x.pts_to or 99) >= stat_vals['BODY']][0]
-                    sub.append([item[0].id, body_type.bt_modifier])
-                elif item[0].id == 'DMG':
-                    body_type = [x for x in data['BODY_TYPES'] if x.pts_from <= stat_vals['BODY'] and (x.pts_to or 99) >= stat_vals['BODY']][0]
-                    sub.append([item[0].id, body_type.dmg_modifier])
+                item = item[0]
+                if item.category is not None and item.multiplier is not None:
+                    npc_stat = [x.value for x in npc_stats if x.stat.id == item.category][0]
+                    sub.append([item.id, item.multiplier * npc_stat])
+                elif item.id == 'BTM' or item.id == 'DMG':
+                    npc_stat = [x.value for x in npc_stats if x.stat.id == 'BODY'][0]
+                    body_type = [x for x in data['BODY_TYPES'] if x.pts_from <= npc_stat and (x.pts_to or 99) >= npc_stat][0]
+                    if item.id == 'BTM':
+                        sub.append([item.id, body_type.bt_modifier])
+                    elif item.id == 'DMG':
+                        sub.append([item.id, body_type.dmg_modifier])
                 else:
-                    sub.append([item[0].id, 0])
+                    sub.append([item.id, 0])
         cstat_vals.append(sub)
     return cstat_vals
 
-def compute_armorsp(armor_vals):
+def compute_armorsp(npc_armor):
     return {
-        'sp_head': armor_vals[0].sp_head if armor_vals[0] is not None else 0,
-        'sp_torso': (armor_vals[1].sp_torso if armor_vals[1] is not None else 0) + (armor_vals[2].sp_torso if armor_vals[2] is not None else 0),
-        'sp_larm': (armor_vals[1].sp_larm if armor_vals[1] is not None else 0) + (armor_vals[2].sp_larm if armor_vals[2] is not None else 0),
-        'sp_rarm': (armor_vals[1].sp_rarm if armor_vals[1] is not None else 0) + (armor_vals[2].sp_rarm if armor_vals[2] is not None else 0),
-        'sp_lleg': armor_vals[3].sp_lleg if armor_vals[3] is not None else 0,
-        'sp_rleg': armor_vals[3].sp_rleg if armor_vals[3] is not None else 0
+        'sp_head': sum([armor.armor.sp_head for armor in npc_armor]),
+        'sp_torso': sum([armor.armor.sp_torso for armor in npc_armor]),
+        'sp_larm': sum([armor.armor.sp_larm for armor in npc_armor]),
+        'sp_rarm': sum([armor.armor.sp_rarm for armor in npc_armor]),
+        'sp_lleg': sum([armor.armor.sp_lleg for armor in npc_armor]),
+        'sp_rleg': sum([armor.armor.sp_rleg for armor in npc_armor])
     }

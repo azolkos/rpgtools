@@ -72,6 +72,7 @@ insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','MA
 insert into tinfoilpunk_racebonus (race_id,stat_id,modifier) values ('Aryan','REF',-1);
 
 -- Body types
+insert into tinfoilpunk_bodytype (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Frail',-5,0,0,1,-3);
 insert into tinfoilpunk_bodytype (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Very Weak',1,2,0,-2);
 insert into tinfoilpunk_bodytype (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Weak',3,4,-1,-1);
 insert into tinfoilpunk_bodytype (id,pts_from,pts_to,bt_modifier,dmg_modifier) values ('Average',5,7,-2,0);

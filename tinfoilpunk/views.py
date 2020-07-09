@@ -25,7 +25,7 @@ def npcgenerator(request):
             race = request.POST['0_race']
             if race == 'Random':
                 race = random.choice(data['RACES'])
-            
+
             # Get level
             level = request.POST['0_level']
             if level == 'Random':
@@ -45,8 +45,6 @@ def npcgenerator(request):
             'levels': data['LEVELS'],
             'roles': data['ROLES'],
             'races': data['RACES'],
-            'stats': {x.id: x.info for x in data['STATS']},
-            'skills': data['SKILLS'],
             'weapons': data['WEAPONS'],
             'tinfoilware': data['TINFOILWARE'],
             'armor': [data['ARMOR_HELMET'], data['ARMOR_JACKET'], data['ARMOR_VEST'], data['ARMOR_PANTS']],

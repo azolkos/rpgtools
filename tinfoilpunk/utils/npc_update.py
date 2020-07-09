@@ -1,68 +1,61 @@
+from tinfoilpunk.models import Npc, NpcStat, NpcSkill, NpcWeapon, NpcArmor, NpcTinfoilware
 from .npc_compute import compute_stats, compute_armorsp
 
 def update_npcs(keys, form, data):
     npc_sheets = {}
     npc_ids = list({int(x[0]) for x in keys if x[0] != '0' and len(x) != 1})
 
-    for npc in npc_ids:
-        level = form[f'{npc}_level']
-        handle = form[f'{npc}_handle']
-        role = form[f'{npc}_role']
-        race = form[f'{npc}_race']
-        possessions = form[f'{npc}_possessions']
+    for npc_id in npc_ids:
+        handle = form[f'{npc_id}_handle']
+        level = data['LEVELS'].filter(id__exact=form[f'{npc_id}_level']).first()
+        role = data['ROLES'].filter(id__exact=form[f'{npc_id}_role']).first()
+        race = data['RACES'].filter(id__exact=form[f'{npc_id}_race']).first()
+        possessions = form[f'{npc_id}_possessions']
 
-        stat_vals = {}
-        for stat in [x for x in keys if len(x) != 1 and int(x[0]) == npc and x[1] == 'stats']:
-            stat_vals[stat[2]] = int(form['_'.join(stat)])
-        stat_sum = sum([int(x) for x in stat_vals.values()])
+        npc = Npc(handle=handle, level=level, race=race, role=role, possessions=possessions)
 
-        skill_vals = {}
-        for skill in [x for x in keys if len(x) != 1 and int(x[0]) == npc and x[1] == 'skills']:
-            skill_stat = data['SKILLS'].filter(id__exact=skill[2]).first().stat_id
-            skill_info = data['SKILLS'].filter(id__exact=skill[2]).first().info
-            skill_vals[skill[2]] = [form['_'.join(skill)], skill_stat, skill_info]
+        npc_stats = []
+        for stat in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'stats']:
+            npc_stats.append(NpcStat(npc=npc, stat=data['STATS'].filter(id__exact=stat[2]).first(), value=int(form['_'.join(stat)])))
 
-        weapon_vals = []
-        for weapon in [x for x in keys if len(x) != 1 and int(x[0]) == npc and x[1] == 'weapon']:
-            w_id = form['_'.join(weapon)]
-            w_db = [x for x in data['WEAPONS'] if x.id == w_id]
-            for row in w_db:
-                if row != []:
-                    weapon_vals.append(row)
+        npc_skills = []
+        for skill in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'skills']:
+            npc_skills.append(NpcSkill(npc=npc, skill=data['SKILLS'].filter(id__exact=skill[2]).first(), value=form['_'.join(skill)]))
 
-        tinfoilware_vals = []
-        for tinfoil in [x for x in keys if len(x) != 1 and int(x[0]) == npc and x[1] == 'tinfoil']:
-            t_id = form['_'.join(tinfoil)]
-            t_db = [x for x in data['TINFOILWARE'] if x.id == t_id]
-            for row in t_db:
-                if row != []:
-                    tinfoilware_vals.append(row)
+        npc_weapons = []
+        for weapon in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'weapon']:
+            weapon = data['WEAPONS'].filter(id__exact=form['_'.join(weapon)]).first()
+            if weapon:
+                npc_weapons.append(NpcWeapon(npc=npc, weapon=weapon))
 
-        armor_parts = ['helmet', 'jacket', 'vest', 'pants']
-        armor_vals = []
-        for armor in armor_parts:
-            armor_mat = form[str(npc)+f'_armor_{armor}'].split(' ')
-            armor_db = [x for x in data[f'ARMOR_{armor.upper()}'] if x.material_id == ' '.join(armor_mat[:-1])]
-            armor_vals.append(armor_db[0] if armor_db != [] else None)
+        npc_tinfoilware = []
+        for tinfoilware in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'tinfoilware']:
+            tinfoilware = data['TINFOILWARE'].filter(id__exact=form['_'.join(tinfoilware)]).first()
+            if tinfoilware:
+                npc_tinfoilware.append(NpcTinfoilware(npc=npc, tinfoilware=tinfoilware))
 
-        armor_sp = compute_armorsp(armor_vals)
+        npc_armor = []
+        armor_parts = ['helmet', 'jacket', 'pants', 'vest']
+        for armor_part in armor_parts:
+            armor_material = form[f'{npc_id}_armor_{armor_part}'].split(' ')
+            armor_material = ' '.join(armor_material[:-1]) if armor_material else None
+            armor = data['ARMOR'].filter(part_id__exact=armor_part.capitalize(), material_id__exact=armor_material).first()
+            if armor:
+                npc_armor.append(NpcArmor(npc=npc, armor=armor))
 
-        cstat_vals = compute_stats(stat_vals, data)
+        npc_armor_sp = compute_armorsp(npc_armor)
 
-        npc_sheets[npc] = {
-            'level': level,
-            'handle': handle,
-            'role': role,
-            'race': race,
-            'possessions': possessions,
-            'stat_vals': stat_vals,
-            'stat_sum': stat_sum,
-            'skill_vals': skill_vals,
-            'weapon_vals': weapon_vals,
-            'tinfoilware_vals': tinfoilware_vals,
-            'armor_vals': armor_vals,
-            'armor_sp': armor_sp,
-            'cstat_vals': cstat_vals
+        npc_comp_stats = compute_stats(npc_stats, data)
+
+        npc_sheets[npc_id] = {
+            'npc': npc,
+            'npc_stats': npc_stats,
+            'npc_skills': npc_skills,
+            'npc_weapons': npc_weapons,
+            'npc_armor': npc_armor,
+            'npc_tinfoilware': npc_tinfoilware,
+            'npc_armor_sp': npc_armor_sp,
+            'npc_comp_stats': npc_comp_stats
         }
 
     return npc_sheets

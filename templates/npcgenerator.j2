@@ -29,10 +29,12 @@
         {% for npc, data in npc_sheets.items %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
-                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.handle }}"></td>
-                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_race" type="hidden" value="{{ data.race }}">{{ data.race }}</td>
-                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_level" type="hidden" value="{{ data.level }}">{{ data.level }}</td>
-                <td colspan="8" style="vertical-align: middle"><input name="{{ npc }}_role" type="hidden" value="{{ data.role }}">{{ data.role }}</td>
+                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.npc.handle }}"></td>
+                <td colspan="24" style="vertical-align: middle">
+                    <input name="{{ npc }}_level" type="hidden" value="{{ data.npc.level }}">{{ data.npc.level }}</input>
+                    <input name="{{ npc }}_race" type="hidden" value="{{ data.npc.race }}">{{ data.npc.race }}</input>
+                    <input name="{{ npc }}_role" type="hidden" value="{{ data.npc.role }}">{{ data.npc.role }}</input>
+                </td>
                 <td colspan="6" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
             </tr>
             <tr>
@@ -41,11 +43,10 @@
                         <tr>
                             <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ data.stat_sum }})</td>
                         </tr>
-                        {% for stat, val in data.stat_vals.items %}
-                        {% load get_item %}
+                        {% for stat in data.npc_stats %}
                         <tr>
-                            <td class="tooltip">{{ stat }}<span class="tooltiptext">{{ stats|get_item:stat }}</span></td>
-                            <td>[<input name="{{ npc }}_stats_{{ stat }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ val }}" value="{{ val }}" required></input>]</td>
+                            <td class="tooltip">{{ stat.stat.id }}<span class="tooltiptext">{{ stat.stat.info }}</span></td>
+                            <td>[<input name="{{ npc }}_stats_{{ stat.stat.id}}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ stat.value }}" value="{{ stat.value }}" required></input>]</td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -55,13 +56,11 @@
                         <tr>
                             <td colspan="3" class="npc_section_header">SKILLS</td>
                         </tr>
-                        {% for skill, val in data.skill_vals.items %}
+                        {% for skill in data.npc_skills %}
                         <tr>
-                            <td class="tooltip">{{ skill }}<span class="tooltiptext">{{ val.2 }}</span></td>
-                            <td>[<input name="{{ npc }}_skills_{{ skill }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ val.0 }}" value="{{ val.0 }}" required></input>]</td>
-                            {% if val.1 != None %}
-                            <td>({{ val.1 }})</td>
-                            {% endif %}
+                            <td class="tooltip">{{ skill.skill.id }}<span class="tooltiptext">{{ skill.skill.info }}</span></td>
+                            <td>[<input name="{{ npc }}_skills_{{ skill.skill.id }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ skill.value }}" value="{{ skill.value }}" required></input>]</td>
+                            <td>({{ skill.skill.stat_id }})</td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -76,15 +75,15 @@
                             <td style="text-align: center">#/rof</td>
                             <td style="text-align: center">rel</td>
                         </tr>
-                        {% for weapon in data.weapon_vals %}
-                        <tr id="{{ npc }}_weapon_{{ weapon.id|escape }}" style="text-align: center">
-                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_weapon_{{ weapon.id|escape }}" type="hidden" value="{{ weapon.id|escape }}">{{ weapon.id }}<span class="tooltiptext">{{ weapon.info }}</span></input></td>
-                            <td>{{ weapon.w_type }}</td>
-                            <td>{{ weapon.accuracy }}</td>
-                            <td>{{ weapon.damage }}</td>
-                            <td>{{ weapon.shots }}/{{ weapon.rof }}</td>
-                            <td>{{ weapon.w_reliability }}</td>
-                            <td class="row_op" onClick="remove_id('{{ npc }}_weapon_{{ weapon.id|escape }}')">-</td>
+                        {% for weapon in data.npc_weapons %}
+                        <tr id="{{ npc }}_weapon_{{ weapon.weapon.id|escape }}" style="text-align: center">
+                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_weapon_{{ weapon.weapon.id|escape }}" type="hidden" value="{{ weapon.weapon.id|escape }}">{{ weapon.weapon.id }}<span class="tooltiptext">{{ weapon.weapon.info }}</span></input></td>
+                            <td>{{ weapon.weapon.w_type }}</td>
+                            <td>{{ weapon.weapon.accuracy }}</td>
+                            <td>{{ weapon.weapon.damage }}</td>
+                            <td>{{ weapon.weapon.shots }}/{{ weapon.weapon.rof }}</td>
+                            <td>{{ weapon.weapon.w_reliability }}</td>
+                            <td class="row_op" onClick="remove_id('{{ npc }}_weapon_{{ weapon.weapon.id|escape }}')">-</td>
                         </tr>
                         {% endfor %}
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
@@ -111,15 +110,15 @@
                         <tr>
                             <td class="npc_section_header">TINFOILWARE</td>
                         </tr>
-                        {% for tinfoil in data.tinfoilware_vals %}
-                        <tr id="{{ npc }}_tinfoil_{{ tinfoil.id|escape }}">
-                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_tinfoil_{{ tinfoil.id|escape }}" type="hidden" value="{{ tinfoil.id|escape }}">{{ tinfoil.id }}<span class="tooltiptext">{{ tinfoil.info }}</span></input></td>
-                            <td class="row_op" onClick="remove_id('{{ npc }}_tinfoil_{{ tinfoil.id|escape }}')">-</td>
+                        {% for tinfoilware in data.npc_tinfoilware %}
+                        <tr id="{{ npc }}_tinfoilware_{{ tinfoilware.tinfoilware.id|escape }}">
+                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_tinfoilware_{{ tinfoilware.tinfoilware.id|escape }}" type="hidden" value="{{ tinfoilware.tinfoilware.id|escape }}">{{ tinfoilware.tinfoilware.id }}<span class="tooltiptext">{{ tinfoilware.tinfoilware.info }}</span></input></td>
+                            <td class="row_op" onClick="remove_id('{{ npc }}_tinfoilware_{{ tinfoilware.tinfoilware.id|escape }}')">-</td>
                         </tr>
                         {% endfor %}
-                        <tr id="{{ npc }}_tinfoilselect_1" style="display: none">
+                        <tr id="{{ npc }}_tinfoilwareselect_1" style="display: none">
                             <td>
-                                <select name="{{ npc }}_tinfoil_1">
+                                <select name="{{ npc }}_tinfoilware_1">
                                     <option value="None">None</option>
                                     {% for tinfoil in tinfoilware %}
                                         <option value="{{ tinfoil.id|escape }}">{{ tinfoil.id }}</option>
@@ -130,7 +129,7 @@
                     </table>
                     <table>
                         <tr>
-                            <td class="row_op" onClick="add_select({{ npc }}, 'tinfoil')">+</td>
+                            <td class="row_op" onClick="add_select({{ npc }}, 'tinfoilware')">+</td>
                         </tr>
                     </table>
                     <table>
@@ -143,9 +142,11 @@
                                     <option value="None">None</option>
                                     {% for piece in armor.0 %}
                                     <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% if piece.material_id == data.armor_vals.0.material_id and piece.part_id == data.armor_vals.0.part_id %}
-                                        selected="selected"
-                                        {% endif %}
+                                        {% for armor in data.npc_armor %}
+                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
+                                                selected="selected"
+                                            {% endif %}
+                                        {% endfor %}
                                     >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
@@ -155,9 +156,11 @@
                                     <option value="None">None</option>
                                     {% for piece in armor.1 %}
                                     <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% if piece.material_id == data.armor_vals.1.material_id and piece.part_id == data.armor_vals.1.part_id %}
-                                        selected="selected"
-                                        {% endif %}
+                                        {% for armor in data.npc_armor %}
+                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
+                                                selected="selected"
+                                            {% endif %}
+                                        {% endfor %}
                                     >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
@@ -169,9 +172,11 @@
                                     <option value="None">None</option>
                                     {% for piece in armor.2 %}
                                     <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% if piece.material_id == data.armor_vals.2.material_id and piece.part_id == data.armor_vals.2.part_id %}
-                                        selected="selected"
-                                        {% endif %}
+                                        {% for armor in data.npc_armor %}
+                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
+                                                selected="selected"
+                                            {% endif %}
+                                        {% endfor %}
                                     >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
@@ -181,9 +186,11 @@
                                     <option value="None">None</option>
                                     {% for piece in armor.3 %}
                                     <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% if piece.material_id == data.armor_vals.3.material_id and piece.part_id == data.armor_vals.3.part_id %}
-                                        selected="selected"
-                                        {% endif %}
+                                        {% for armor in data.npc_armor %}
+                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
+                                                selected="selected"
+                                            {% endif %}
+                                        {% endfor %}
                                     >{{ piece.material_id }} {{ piece.part_id }}</option>
                                     {% endfor %}
                                 </select>
@@ -198,7 +205,7 @@
                         <tr>
                             <td colspan="6" class="npc_section_header">COMPUTED STATS</td>
                         </tr>
-                        {% for row in data.cstat_vals %}
+                        {% for row in data.npc_comp_stats %}
                         <tr>
                             {% for col in row %}
                                 {% if col != None %}
@@ -235,12 +242,12 @@
                             {% endfor %}
                         </tr>
                         <tr style="text-align: center">
-                            <td>[{{ data.armor_sp.sp_head }}]</td>
-                            <td>[{{ data.armor_sp.sp_torso }}]</td>
-                            <td>[{{ data.armor_sp.sp_larm }}]</td>
-                            <td>[{{ data.armor_sp.sp_rarm }}]</td>
-                            <td>[{{ data.armor_sp.sp_lleg }}]</td>
-                            <td>[{{ data.armor_sp.sp_rleg }}]</td>
+                            <td>[{{ data.npc_armor_sp.sp_head }}]</td>
+                            <td>[{{ data.npc_armor_sp.sp_torso }}]</td>
+                            <td>[{{ data.npc_armor_sp.sp_larm }}]</td>
+                            <td>[{{ data.npc_armor_sp.sp_rarm }}]</td>
+                            <td>[{{ data.npc_armor_sp.sp_lleg }}]</td>
+                            <td>[{{ data.npc_armor_sp.sp_rleg }}]</td>
                         </tr>
                     </table>
                 </td>
@@ -252,7 +259,7 @@
                             <td class="npc_section_header">POSSESSIONS</td>
                         </tr>
                         <tr>
-                            <td><input name="{{ npc }}_possessions" type="text" style="width: 100%; border: none; height: 20px;" placeholder="List of possessions" value="{{ data.possessions }}"></td>
+                            <td><input name="{{ npc }}_possessions" type="text" style="width: 100%; border: none; height: 20px;" placeholder="List of possessions" value="{{ data.npc.possessions }}"></td>
                         </tr>
                     </table>
                 </td>

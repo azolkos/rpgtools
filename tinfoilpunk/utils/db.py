@@ -30,7 +30,7 @@ def get_globals():
     # ''')
 
     # items['WEAPONS_CAT'] = query_db('select * from weapon_cat_sort order by idx')
-    items['ARMOR_PARTS'] = ArmorPart.objects.all()
+    items['ARMOR_PARTS'] = ArmorPart.objects.order_by('id')
     items['ARMOR'] = Armor.objects.all()
 
     items['ARMOR_HELMET'] = Armor.objects.filter(part_id__exact='Helmet').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
