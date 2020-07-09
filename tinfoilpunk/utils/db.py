@@ -1,10 +1,12 @@
-from tinfoilpunk.models import (Armor, ArmorPart, BodyPart, BodyType, CareerSkill, Level,
-                                Race, RaceBonus, Role, Skill, Stat,
-                                Tinfoilware, Weapon, Wound)
+from tinfoilpunk.models import (
+    Armor, ArmorPart, BodyPart, BodyType, CareerSkill, Level, Npc, Race,
+    RaceBonus, Role, Skill, Stat, Tinfoilware, Weapon, Wound)
 
 
 def get_globals():
     items = {}
+
+    items['NPCS'] = Npc.objects.order_by('id')
 
     items['LEVELS'] = Level.objects.order_by('lvl')
     items['RACES'] = Race.objects.order_by('id')
@@ -16,20 +18,9 @@ def get_globals():
 
     items['SKILLS'] = Skill.objects.order_by('id')
     items['CAREER_SKILLS'] = CareerSkill.objects.select_related('skill')
-    # print(items['CAREER_SKILLS'][0].skill.stat_id)
 
     items['WEAPONS'] = Weapon.objects.all()
 
-    # items['WEAPON_NAMES'] = query_db('''
-    #     select wcs.idx, wcs.cat, w.name
-    #     from weapons w
-    #     join weapon_types wt on wt.id = w.type
-    #     left join weapon_subtypes ws on ws.id = w.subtype
-    #     join weapon_cat_sort wcs on wcs.cat = coalesce(ws.name || ' ', '') || wt.name || 's'
-    #     order by wcs.idx
-    # ''')
-
-    # items['WEAPONS_CAT'] = query_db('select * from weapon_cat_sort order by idx')
     items['ARMOR_PARTS'] = ArmorPart.objects.order_by('id')
     items['ARMOR'] = Armor.objects.all()
 

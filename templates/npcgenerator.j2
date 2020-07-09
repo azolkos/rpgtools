@@ -23,25 +23,33 @@
             {% endfor %}
         </select>
         <button name="0_submit" class="w3-button w3-black" type="submit" value="generate">GENERATE</button>
-        <button name="0_submit" class="w3-button w3-black w3-right" type="submit" value="update">UPDATE</button>
+        <button name="0_submit" class="w3-button w3-black" type="submit" value="update">UPDATE</button>
+        
+        <select name="0_npc" style="margin-top: 20px">
+            {% for npc in npcs %}
+            <option value="{{ npc.id }}">{{ npc }}</option>
+            {% endfor %}
+        </select>
+        <button name="0_submit" class="w3-button w3-black" type="submit" value="load">LOAD</button>
 
         {# NPC character sheets #}
         {% for npc, data in npc_sheets.items %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
-                <td colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.npc.handle }}"></td>
-                <td colspan="24" style="vertical-align: middle">
+                <th colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.npc.handle }}"></th>
+                <th colspan="26" style="vertical-align: middle; text-align: left">
                     <input name="{{ npc }}_level" type="hidden" value="{{ data.npc.level }}">{{ data.npc.level }}</input>
                     <input name="{{ npc }}_race" type="hidden" value="{{ data.npc.race }}">{{ data.npc.race }}</input>
                     <input name="{{ npc }}_role" type="hidden" value="{{ data.npc.role }}">{{ data.npc.role }}</input>
-                </td>
-                <td colspan="6" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></td>
+                </th>
+                {# <th colspan="2" style="vertical-align: middle"><button name="{{ npc }}_save" class="w3-button w3-hover-black w3-right" value="{{ npc }}_save">+</button></th> #}
+                <th colspan="3" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
             </tr>
             <tr>
                 <td colspan="6">
                     <table>
                         <tr>
-                            <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ data.stat_sum }})</td>
+                            <td colspan="2"><span class="npc_section_header">STATS</span> (sum: {{ data.npc_stat_sum }})</td>
                         </tr>
                         {% for stat in data.npc_stats %}
                         <tr>

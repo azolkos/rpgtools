@@ -17,6 +17,7 @@ def update_npcs(keys, form, data):
         npc_stats = []
         for stat in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'stats']:
             npc_stats.append(NpcStat(npc=npc, stat=data['STATS'].filter(id__exact=stat[2]).first(), value=int(form['_'.join(stat)])))
+        npc_stat_sum = sum([x.value for x in npc_stats])
 
         npc_skills = []
         for skill in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'skills']:
@@ -50,6 +51,7 @@ def update_npcs(keys, form, data):
         npc_sheets[npc_id] = {
             'npc': npc,
             'npc_stats': npc_stats,
+            'npc_stat_sum': npc_stat_sum,
             'npc_skills': npc_skills,
             'npc_weapons': npc_weapons,
             'npc_armor': npc_armor,

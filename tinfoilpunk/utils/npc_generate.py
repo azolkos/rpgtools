@@ -4,7 +4,7 @@ from .npc_compute import compute_stats, compute_armorsp
 def generate_npc(level, role, race, npc_id, npc_sheets, data):
 
     # Create new NPC
-    npc = Npc(handle='New NPC', level=level, race=race, role=role)
+    npc = Npc(handle='New NPC', level=level, race=race, role=role, possessions='')
 
     # Generate primary stats
     npc_stats = []
@@ -13,6 +13,7 @@ def generate_npc(level, role, race, npc_id, npc_sheets, data):
         bonus = data['RACEBONUS'].filter(race_id__exact=race, stat_id=stat).first()
         value += (bonus.modifier if bonus else 0)
         npc_stats.append(NpcStat(npc=npc, stat=stat, value=value))
+    npc_stat_sum = sum([x.value for x in npc_stats])
 
     # Generate skills
     npc_skills = []
@@ -56,6 +57,7 @@ def generate_npc(level, role, race, npc_id, npc_sheets, data):
     npc_sheets[npc_id] = {
         'npc': npc,
         'npc_stats': npc_stats,
+        'npc_stat_sum': npc_stat_sum,
         'npc_skills': npc_skills,
         'npc_weapons': npc_weapons,
         'npc_armor': npc_armor,
