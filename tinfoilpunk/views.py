@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .utils.db import get_globals
 from .utils.npc_generate import generate_npc
 from .utils.npc_update import update_npcs
-from .utils.npc_load import load_npc
+from .utils.npc_db import load_npc, save_npc
 
 # Create your views here.
 def index(request):
@@ -23,6 +23,10 @@ def npcgenerator(request):
 
         # Get new npc_id
         npc_id = int(max([x[0] for x in keys if len(x) != 1])) + 1
+
+        if request.POST['0_submit'].isnumeric():
+
+            save_npc(npc_sheets[int(request.POST['0_submit'])])
 
         if request.POST['0_submit'] == 'load':
 

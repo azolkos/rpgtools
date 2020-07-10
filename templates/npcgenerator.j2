@@ -4,16 +4,16 @@
     {# Input parameters #}
     <form action="" method="POST">
     {% csrf_token %}
-        <select name="0_race">
-            <option value="Random">Random</option>
-            {% for race in races %}
-            <option value="{{ race.id }}">{{ race.id }}</option>
-            {% endfor %}
-        </select>
         <select name="0_level">
             <option value="Random">Random</option>
             {% for level in levels %}
             <option value="{{ level.id }}">{{ level.id }}</option>
+            {% endfor %}
+        </select>
+        <select name="0_race">
+            <option value="Random">Random</option>
+            {% for race in races %}
+            <option value="{{ race.id }}">{{ race.id }}</option>
             {% endfor %}
         </select>
         <select name="0_role">
@@ -36,13 +36,14 @@
         {% for npc, data in npc_sheets.items %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
+                <input name="{{ npc }}_id" type="hidden" value="{{ data.npc.id }}"></input>
                 <th colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.npc.handle }}"></th>
                 <th colspan="26" style="vertical-align: middle; text-align: left">
                     <input name="{{ npc }}_level" type="hidden" value="{{ data.npc.level }}">{{ data.npc.level }}</input>
                     <input name="{{ npc }}_race" type="hidden" value="{{ data.npc.race }}">{{ data.npc.race }}</input>
                     <input name="{{ npc }}_role" type="hidden" value="{{ data.npc.role }}">{{ data.npc.role }}</input>
                 </th>
-                {# <th colspan="2" style="vertical-align: middle"><button name="{{ npc }}_save" class="w3-button w3-hover-black w3-right" value="{{ npc }}_save">+</button></th> #}
+                <th colspan="2" style="vertical-align: middle"><button name="0_submit" class="w3-button w3-hover-black w3-right" value="{{ npc }}">+</button></th>
                 <th colspan="3" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
             </tr>
             <tr>

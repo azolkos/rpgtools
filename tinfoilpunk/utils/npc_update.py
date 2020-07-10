@@ -6,13 +6,14 @@ def update_npcs(keys, form, data):
     npc_ids = list({int(x[0]) for x in keys if x[0] != '0' and len(x) != 1})
 
     for npc_id in npc_ids:
+        db_id = form[f'{npc_id}_id']
         handle = form[f'{npc_id}_handle']
         level = data['LEVELS'].filter(id__exact=form[f'{npc_id}_level']).first()
         role = data['ROLES'].filter(id__exact=form[f'{npc_id}_role']).first()
         race = data['RACES'].filter(id__exact=form[f'{npc_id}_race']).first()
         possessions = form[f'{npc_id}_possessions']
 
-        npc = Npc(handle=handle, level=level, race=race, role=role, possessions=possessions)
+        npc = Npc(id=db_id, handle=handle, level=level, race=race, role=role, possessions=possessions)
 
         npc_stats = []
         for stat in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'stats']:
