@@ -33,20 +33,26 @@ def npcgenerator(request):
             npc_sheets = load_npc(request.POST['0_npc'], npc_id, npc_sheets, data)
 
         if request.POST['0_submit'] == 'generate':
-            # Get Race
-            race = request.POST['0_race']
-            if race == 'Random':
-                race = random.choice(data['RACES'])
-
             # Get level
             level = request.POST['0_level']
             if level == 'Random':
                 level = random.choice(data['LEVELS'])
+            else:
+                level = data['LEVELS'].get(id=level)
+
+            # Get Race
+            race = request.POST['0_race']
+            if race == 'Random':
+                race = random.choice(data['RACES'])
+            else:
+                race = data['RACES'].get(id=race)
 
             # Get role
             role = request.POST['0_role']
             if role == 'Random':
                 role = random.choice(data['ROLES'])
+            else:
+                role = data['ROLES'].get(id=role)
 
             npc_sheets = generate_npc(level, role, race, npc_id, npc_sheets, data)
 
