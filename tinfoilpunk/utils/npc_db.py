@@ -3,7 +3,7 @@ from .npc_compute import compute_stats, compute_armorsp
 
 def load_npc(db_id, npc_id, npc_sheets, data):
 
-    # Create new NPC
+    # Load npc
     npc = Npc.objects.filter(id__exact=db_id).first()
     npc_stats = NpcStat.objects.filter(npc=npc)
     npc_stat_sum = sum([x.value for x in npc_stats])
@@ -54,15 +54,11 @@ def save_npc(npc):
         except NpcStat.DoesNotExist:
             npc_stat.save()
 
-    # Upsert skills
+    # Insert skills
+    NpcSkill.objects.filter(npc=npc['npc']).delete()
     for npc_skill in npc['npc_skills']:
         npc_skill.npc = npc['npc']
-        try:
-            npc_skill_inst = NpcSkill.objects.get(npc=npc_skill.npc, skill=npc_skill.skill)
-            npc_skill_inst.value = npc_skill.value
-            npc_skill_inst.save()
-        except NpcSkill.DoesNotExist:
-            npc_skill.save()
+        npc_skill.save()
 
     # Insert weapons
     NpcWeapon.objects.filter(npc=npc['npc']).delete()
