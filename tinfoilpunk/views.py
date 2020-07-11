@@ -61,6 +61,7 @@ def npcgenerator(request):
             'races': data['RACES'],
             'roles': data['ROLES'],
             'npcs': data['NPCS'],
+            'skills': data['SKILLS'],
             'weapons': data['WEAPONS'],
             'tinfoilware': data['TINFOILWARE'],
             'armor': [data['ARMOR_HELMET'], data['ARMOR_JACKET'], data['ARMOR_VEST'], data['ARMOR_PANTS']],

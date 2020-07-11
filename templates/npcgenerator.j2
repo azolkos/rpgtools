@@ -38,13 +38,13 @@
             <tr>
                 <input name="{{ npc }}_id" type="hidden" value="{{ data.npc.id }}"></input>
                 <th colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.npc.handle }}"></th>
-                <th colspan="26" style="vertical-align: middle; text-align: left">
+                <th colspan="24" style="vertical-align: middle; text-align: left">
                     <input name="{{ npc }}_level" type="hidden" value="{{ data.npc.level }}">{{ data.npc.level }}</input>
                     <input name="{{ npc }}_race" type="hidden" value="{{ data.npc.race }}">{{ data.npc.race }}</input>
                     <input name="{{ npc }}_role" type="hidden" value="{{ data.npc.role }}">{{ data.npc.role }}</input>
                 </th>
                 <th colspan="2" style="vertical-align: middle"><button name="0_submit" class="w3-button w3-hover-black w3-right" value="{{ npc }}">+</button></th>
-                <th colspan="3" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
+                <th colspan="2" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
             </tr>
             <tr>
                 <td colspan="6">
@@ -61,17 +61,33 @@
                     </table>
                 </td>
                 <td colspan="14">
-                    <table>
+                    <table id="{{ npc }}_skill_table">
                         <tr>
                             <td colspan="3" class="npc_section_header">SKILLS</td>
                         </tr>
                         {% for skill in data.npc_skills %}
-                        <tr>
+                        <tr id="{{ npc }}_skill_{{ skill.skill.id|escape }}">
                             <td class="tooltip">{{ skill.skill.id }}<span class="tooltiptext">{{ skill.skill.info }}</span></td>
                             <td>[<input name="{{ npc }}_skills_{{ skill.skill.id }}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ skill.value }}" value="{{ skill.value }}" required></input>]</td>
                             <td>({{ skill.skill.stat_id }})</td>
+                            <td class="row_op" onClick="remove_id('{{ npc }}_skill_{{ skill.skill.id|escape }}')">-</td>
                         </tr>
                         {% endfor %}
+                        <tr id="{{ npc }}_skillselect_1" style="display: none">
+                            <td>
+                                <select name="{{ npc }}_skill_1">
+                                    <option value="None">None</option>
+                                    {% for skill in skills %}
+                                        <option value="{{ skill.id|escape }}">{{ skill.id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td class="row_op" onClick="add_select({{ npc }}, 'skill')">+</td>
+                        </tr>
                     </table>
                 </td>
                 <td colspan="20">
@@ -98,14 +114,10 @@
                         <tr id="{{ npc }}_weaponselect_1" style="display: none">
                             <td colspan="6">
                                 <select name="{{ npc }}_weapon_1">
-                                        <option value="None">None</option>
-                                    {# {% for cat in weapons_cat %} #}
-                                        {# <optgroup label="{{ cat.cat }}"> #}
-                                            {% for weapon in weapons %}
-                                                <option value="{{ weapon.id|escape }}">{{ weapon.id }}</option>
-                                            {% endfor %}
-                                        {# </optgroup> #}
-                                    {# {% endfor %} #}
+                                    <option value="None">None</option>
+                                    {% for weapon in weapons %}
+                                        <option value="{{ weapon.id|escape }}">{{ weapon.id }}</option>
+                                    {% endfor %}
                                 </select>
                             </td>
                         </tr>

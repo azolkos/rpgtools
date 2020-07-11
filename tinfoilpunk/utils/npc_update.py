@@ -23,6 +23,9 @@ def update_npcs(keys, form, data):
         npc_skills = []
         for skill in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'skills']:
             npc_skills.append(NpcSkill(npc=npc, skill=data['SKILLS'].filter(id__exact=skill[2]).first(), value=form['_'.join(skill)]))
+        for skill in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'skill']:
+            if form['_'.join(skill)] != 'None':
+                npc_skills.append(NpcSkill(npc=npc, skill=data['SKILLS'].filter(id__exact=form['_'.join(skill)]).first(), value=0))
 
         npc_weapons = []
         for weapon in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'weapon']:
