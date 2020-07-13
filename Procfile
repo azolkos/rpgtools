@@ -1,1 +1,1 @@
-web: gunicorn rpg:tinfoilpunk
+web: gunicorn rpg.wsgi
