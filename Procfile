@@ -1,1 +1,1 @@
-web: gunicorn tinfoilpunk:app
+web: gunicorn rpg:tinfoilpunk
