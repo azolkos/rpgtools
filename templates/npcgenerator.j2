@@ -43,8 +43,12 @@
                     <input name="{{ npc }}_race" type="hidden" value="{{ data.npc.race }}">{{ data.npc.race }}</input>
                     <input name="{{ npc }}_role" type="hidden" value="{{ data.npc.role }}">{{ data.npc.role }}</input>
                 </th>
-                <th colspan="2" style="vertical-align: middle"><button name="0_submit" class="w3-button w3-hover-black w3-right" value="{{ npc }}">+</button></th>
-                <th colspan="2" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
+                {% if user.is_authenticated %}
+                    <th colspan="2" style="vertical-align: middle"><button name="0_submit" class="w3-button w3-hover-black w3-right" value="{{ npc }}">+</button></th>
+                    <th colspan="2" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
+                {% else %}
+                    <th colspan="4" style="vertical-align: middle"><span class="w3-button w3-hover-black w3-right" onClick="remove_npc({{ npc }})">X</span></th>
+                {% endif %}
             </tr>
             <tr>
                 <td colspan="6">

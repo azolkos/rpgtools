@@ -26,7 +26,8 @@ def npcgenerator(request):
 
         if request.POST['0_submit'].isnumeric():
 
-            save_npc(npc_sheets[int(request.POST['0_submit'])])
+            if request.user.is_authenticated:
+                save_npc(npc_sheets[int(request.POST['0_submit'])])
 
         if request.POST['0_submit'] == 'load':
 

@@ -128,3 +128,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/css'),
     os.path.join(BASE_DIR, 'static/javascript'),
 ]
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

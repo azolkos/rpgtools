@@ -31,9 +31,15 @@
     <!-- NAVBAR -->
     <div class="w3-top">
         <div class="w3-bar w3-black w3-card">
-            <span class="w3-bar-item">Cyberpunk Tools</span>
-            <a class="w3-bar-item w3-button w3-hover-red" href="/tinfoilpunk">Home</a>
-            <a class="w3-bar-item w3-button w3-hover-red" href="/tinfoilpunk/npcgenerator">NPC Generator</a>
+            <span class="w3-bar-item">Tinfoilpunk</span>
+            <a class="w3-bar-item w3-button w3-hover-red" href="/">Home</a>
+            <a class="w3-bar-item w3-button w3-hover-red" href="/npcgenerator">NPC Generator</a>
+            {% if user.is_authenticated %}
+                <a class="w3-bar-item w3-right" href="{% url 'logout' %}">logout</a>
+                <span class="w3-bar-item w3-right">{{ user.username }}</span>
+            {% else %}
+                <a class="w3-bar-item w3-right" href="{% url 'login' %}">login</a>
+            {% endif %}
         </div>
     </div>
 
