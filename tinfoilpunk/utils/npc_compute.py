@@ -1,3 +1,5 @@
+import math
+
 def compute_stats(npc_stats, data):
     cstat_db = data['COMP_STATS']
     cstat_rows = max([cstat.idx for cstat in cstat_db])
@@ -13,7 +15,7 @@ def compute_stats(npc_stats, data):
                 item = item[0]
                 if item.category is not None and item.multiplier is not None:
                     npc_stat = [x.value for x in npc_stats if x.stat.id == item.category][0]
-                    sub.append([item.id, item.multiplier * npc_stat])
+                    sub.append([item.id, math.floor(item.multiplier * npc_stat)])
                 elif item.id == 'BTM' or item.id == 'DMG':
                     npc_stat = [x.value for x in npc_stats if x.stat.id == 'BODY'][0]
                     body_type = [x for x in data['BODY_TYPES'] if x.pts_from <= npc_stat and (x.pts_to or 99) >= npc_stat][0]
