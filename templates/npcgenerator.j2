@@ -4,35 +4,52 @@
     {# Input parameters #}
     <form action="" method="POST">
     {% csrf_token %}
-        <select name="0_level">
-            <option value="Random">Random</option>
-            {% for level in levels %}
-            <option value="{{ level.id }}">{{ level.id }}</option>
-            {% endfor %}
-        </select>
-        <select name="0_race">
-            <option value="Random">Random</option>
-            {% for race in races %}
-            <option value="{{ race.id }}">{{ race.id }}</option>
-            {% endfor %}
-        </select>
-        <select name="0_role">
-            <option value="Random">Random</option>
-            {% for role in roles %}
-            <option value="{{ role.id }}">{{ role.id }}</option>
-            {% endfor %}
-        </select>
-        <button name="0_submit" class="w3-button w3-black" type="submit" value="generate">GENERATE</button>
-        <button name="0_submit" class="w3-button w3-black" type="submit" value="update">UPDATE</button>
-        
-        <select name="0_npc" style="margin-top: 20px">
-            {% for npc in npcs %}
-            <option value="{{ npc.id }}">{{ npc }}</option>
-            {% endfor %}
-        </select>
-        <button name="0_submit" class="w3-button w3-black" type="submit" value="load">LOAD</button>
+
+        <div class="sidebar">
+            <p>Level:
+                <select name="0_level" class="sidebar-item">
+                    <option value="Random">Random</option>
+                    {% for level in levels %}
+                    <option value="{{ level.id }}">{{ level.id }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>Race:
+                <select name="0_race" class="sidebar-item">
+                    <option value="Random">Random</option>
+                    {% for race in races %}
+                    <option value="{{ race.id }}">{{ race.id }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>Role:
+                <select name="0_role" class="sidebar-item">
+                    <option value="Random">Random</option>
+                    {% for role in roles %}
+                    <option value="{{ role.id }}">{{ role.id }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <button name="0_submit" class="w3-button w3-black w3-hover-black w3-ripple sidebar-item" type="submit" value="generate">GENERATE</button>
+            </p>
+            <p>
+                <button name="0_submit" class="w3-button w3-black w3-hover-black w3-ripple sidebar-item" type="submit" value="update">UPDATE</button>
+            </p>
+            <p>Characters:
+                <select name="0_npc" class="sidebar-item">
+                    {% for npc in npcs %}
+                    <option value="{{ npc.id }}">{{ npc }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <button name="0_submit" class="w3-button w3-black w3-hover-black w3-ripple sidebar-item" type="submit" value="load">LOAD</button>
+            </p>
+        </div>
 
         {# NPC character sheets #}
+        <div class="w3-container w3-content w3-padding-64" style="max-width:900px">
         {% for npc, data in npc_sheets.items %}
         <table id="npc_{{ npc }}" class="npc_sheet">
             <tr>
@@ -304,6 +321,6 @@
             </tr>
         </table>
         {% endfor %}
-
+        </div>
     </form>
 {% endblock %}
