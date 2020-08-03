@@ -1,3 +1,6 @@
+from collections import Counter
+import numpy
+
 from tinfoilpunk.models import Npc, NpcStat, NpcSkill, NpcWeapon, NpcArmor, NpcTinfoilware
 from .npc_compute import compute_stats, compute_armorsp
 
@@ -8,15 +11,29 @@ def generate_npc(level, role, race, npc_id, npc_sheets, data):
 
     # Generate primary stats
     npc_stats = []
+    stat_sum = numpy.random.randint(25+(level.lvl-1)*10, 35+(level.lvl-1)*10)
+    stat_skills = data['CAREER_SKILLS'].filter(role_id__exact=role)
+    stat_skills = Counter([x.skill.stat_id for x in stat_skills])
+    for k, val in stat_skills.items():
+        stat_skills[k] = val * 9 / sum(stat_skills.values())
     for stat in data['STATS']:
-        value = 5 # tutaj wylosować wartość początkową dla atrybutu
-        bonus = data['RACEBONUS'].filter(race_id__exact=race, stat_id=stat).first()
-        value += (bonus.modifier if bonus else 0)
+        value = numpy.random.binomial(10, 0.5 + 0.05 * (stat_skills[stat.id] if stat_skills[stat.id] else 0))
         npc_stats.append(NpcStat(npc=npc, stat=stat, value=value))
+    npc_stat_sum = sum([x.value for x in npc_stats])
+    for stat in npc_stats:
+        stat.value = stat.value * stat_sum / npc_stat_sum
+        stat.value = round(stat.value)
+        if stat.value > 10:
+            stat.value = 10
+        if stat.value < 1:
+            stat.value = 1
+        bonus = data['RACEBONUS'].filter(race_id__exact=race, stat_id=stat.stat.id).first()
+        stat.value += (bonus.modifier if bonus else 0)
     npc_stat_sum = sum([x.value for x in npc_stats])
 
     # Generate skills
     npc_skills = []
+    skill_sum = numpy.random.randint(25+(level.lvl-1)*10, 35+(level.lvl-1)*10)
     career_skills = data['CAREER_SKILLS'].filter(role_id__exact=role)
     norm_skills = career_skills.filter(alt__isnull=True)
     alt_skills = career_skills.filter(alt__isnull=False)
@@ -24,8 +41,14 @@ def generate_npc(level, role, race, npc_id, npc_sheets, data):
         alt_skills = alt_skills.order_by('?')[:alt_skills.first().alt_no]
     career_skills = norm_skills | alt_skills
     for career_skill in career_skills:
-        value = 5 # tutaj wylosować wartość początkową dla umiejętności
+        value = numpy.random.randint(1, 10)
         npc_skills.append(NpcSkill(npc=npc, skill=career_skill.skill, value=value))
+    for skill in npc_skills:
+        skill.value = round(skill.value * skill_sum / sum([x.value for x in npc_skills]))
+        if skill.value > 10:
+            skill.value = 10
+        if skill.value < 1:
+            skill.value = 1
 
     # Generate weapons
     npc_weapons = []

@@ -30,10 +30,10 @@ def compute_stats(npc_stats, data):
 
 def compute_armorsp(npc_armor):
     return {
-        'sp_head': sum([armor.armor.sp_head for armor in npc_armor]),
-        'sp_torso': sum([armor.armor.sp_torso for armor in npc_armor]),
-        'sp_larm': sum([armor.armor.sp_larm for armor in npc_armor]),
-        'sp_rarm': sum([armor.armor.sp_rarm for armor in npc_armor]),
-        'sp_lleg': sum([armor.armor.sp_lleg for armor in npc_armor]),
-        'sp_rleg': sum([armor.armor.sp_rleg for armor in npc_armor])
+        'sp_head': max([armor.armor.sp_head for armor in npc_armor]),
+        'sp_torso': max([armor.armor.sp_torso for armor in npc_armor]),
+        'sp_larm': max([armor.armor.sp_larm for armor in npc_armor]),
+        'sp_rarm': max([armor.armor.sp_rarm for armor in npc_armor]),
+        'sp_lleg': max([armor.armor.sp_lleg for armor in npc_armor]),
+        'sp_rleg': max([armor.armor.sp_rleg for armor in npc_armor])
     }
