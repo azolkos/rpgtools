@@ -40,15 +40,12 @@ def update_npcs(keys, form, data):
                 npc_tinfoilware.append(NpcTinfoilware(npc=npc, tinfoilware=tinfoilware))
 
         npc_armor = []
-        armor_parts = ['helmet', 'jacket', 'pants', 'vest']
-        for armor_part in armor_parts:
-            armor_material = form[f'{npc_id}_armor_{armor_part}'].split(' ')
-            armor_material = ' '.join(armor_material[:-1]) if armor_material else None
-            armor = data['ARMOR'].filter(part_id__exact=armor_part.capitalize(), material_id__exact=armor_material).first()
+        for armor in [x for x in keys if len(x) != 1 and int(x[0]) == npc_id and x[1] == 'armor']:
+            armor = data['ARMOR'].filter(id__exact=form['_'.join(armor)]).first()
             if armor:
                 npc_armor.append(NpcArmor(npc=npc, armor=armor))
 
-        npc_armor_sp = compute_armorsp(npc_armor)
+        npc_armor_sp = compute_armorsp(npc_armor, data)
 
         npc_comp_stats = compute_stats(npc_stats, data)
 

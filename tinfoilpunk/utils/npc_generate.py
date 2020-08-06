@@ -72,7 +72,7 @@ def generate_npc(level, role, race, npc_id, npc_sheets, data):
         npc_tinfoilware.append(NpcTinfoilware(npc=npc, tinfoilware=tinfoilware))
 
     # Compute armor sp
-    npc_armor_sp = compute_armorsp(npc_armor)
+    npc_armor_sp = compute_armorsp(npc_armor, data)
 
     # Generate computed stats
     npc_comp_stats = compute_stats(npc_stats, data)

@@ -76,7 +76,11 @@
                         {% for stat in data.npc_stats %}
                         <tr>
                             <td class="tooltip">{{ stat.stat.id }}<span class="tooltiptext">{{ stat.stat.info }}</span></td>
-                            <td>[<input name="{{ npc }}_stats_{{ stat.stat.id}}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ stat.value }}" value="{{ stat.value }}" required></input>]</td>
+                            <td>[<input name="{{ npc }}_stats_{{ stat.stat.id}}" type="number" class="input_2ch" onClick="this.select();" placeholder="{{ stat.value }}" value="{{ stat.value }}" required></input>]
+                            {% if stat.stat.id == 'REF' and data.npc_armor_sp.ev != 0 %}
+                                ({{ stat.value|add:data.npc_armor_sp.ev }})
+                            {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -174,69 +178,34 @@
                             <td class="row_op" onClick="add_select({{ npc }}, 'tinfoilware')">+</td>
                         </tr>
                     </table>
+                    <table id="{{ npc }}_armor_table">
+                        <tr>
+                            <td class="npc_section_header">ARMOR</td>
+                            <td style="text-align: center">type</td>
+                            <td style="text-align: center">ev</td>
+                        </tr>
+                        {% for armor in data.npc_armor %}
+                        <tr id="{{ npc }}_armor_{{ armor.armor.id|escape }}" style="text-align: center">
+                            <td class="tooltip" style="text-align: left; width: 100%"><input name="{{ npc }}_armor_{{ armor.armor.id|escape }}" type="hidden" value="{{ armor.armor.id|escape }}">{{ armor.armor.id }}<span class="tooltiptext">HEAD: {{ armor.armor.sp_head }} SP</br>TORSO: {{ armor.armor.sp_torso }} SP</br>LEFT ARM: {{ armor.armor.sp_larm }} SP</br>RIGHT ARM: {{ armor.armor.sp_rarm }} SP</br>LEFT LEG: {{ armor.armor.sp_lleg }} SP</br>RIGHT LEG: {{ armor.armor.sp_rleg }} SP</span></inpute></td>
+                            <td>{{ armor.armor.part }}</td>
+                            <td>{{ armor.armor.ev }}</td>
+                            <td class="row_op" onClick="remove_id('{{ npc }}_armor_{{ armor.armor.id|escape }}')">-</td>
+                        </tr>
+                        {% endfor %}
+                        <tr id="{{ npc }}_armorselect_1" style="display: none">
+                            <td>
+                                <select name="{{ npc }}_armor_1">
+                                    <option value="None">None</option>
+                                    {% for armor in armor %}
+                                        <option value="{{ armor.id|escape }}">{{ armor.id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
                     <table>
                         <tr>
-                            <td colspan="6" class="npc_section_header">ARMOR</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <select name="{{ npc }}_armor_helmet" style="width: 100%">
-                                    <option value="None">None</option>
-                                    {% for piece in armor.0 %}
-                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% for armor in data.npc_armor %}
-                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
-                                                selected="selected"
-                                            {% endif %}
-                                        {% endfor %}
-                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td colspan="3">
-                                <select name="{{ npc }}_armor_jacket" style="width: 100%">
-                                    <option value="None">None</option>
-                                    {% for piece in armor.1 %}
-                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% for armor in data.npc_armor %}
-                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
-                                                selected="selected"
-                                            {% endif %}
-                                        {% endfor %}
-                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <select name="{{ npc }}_armor_vest" style="width: 100%">
-                                    <option value="None">None</option>
-                                    {% for piece in armor.2 %}
-                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% for armor in data.npc_armor %}
-                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
-                                                selected="selected"
-                                            {% endif %}
-                                        {% endfor %}
-                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td colspan="3">
-                                <select name="{{ npc }}_armor_pants" style="width: 100%">
-                                    <option value="None">None</option>
-                                    {% for piece in armor.3 %}
-                                    <option value="{{ piece.material_id }} {{ piece.part_id }}"
-                                        {% for armor in data.npc_armor %}
-                                            {% if piece.material_id == armor.armor.material.id and piece.part_id == armor.armor.part.id %}
-                                                selected="selected"
-                                            {% endif %}
-                                        {% endfor %}
-                                    >{{ piece.material_id }} {{ piece.part_id }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
+                            <td class="row_op" onClick="add_select({{ npc }}, 'armor')">+</td>
                         </tr>
                     </table>
                 </td>

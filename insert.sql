@@ -412,80 +412,48 @@ insert into tinfoilpunk_weapon (id,w_type_id,w_subtype_id,accuracy,w_concealabil
 insert into tinfoilpunk_weapon (id,w_type_id,w_subtype_id,accuracy,w_concealability_id,w_availability_id,damage,ammo,shots,rof,w_reliability_id,weapon_range,cost,info) values ('CAWS','SHG',null,0,'N','R','4D6','00',10,10,'ST','50m',null,'Close in Assault Weapon, designed for house to house work, crowd suppression. Scope is built in. making it very accurate for type.');
 
 -- Armor parts
-insert into tinfoilpunk_armorpart (id) values ('Vest');
-insert into tinfoilpunk_armorpart (id) values ('Jacket');
-insert into tinfoilpunk_armorpart (id) values ('Pants');
-insert into tinfoilpunk_armorpart (id) values ('Helmet');
+insert into tinfoilpunk_armorpart (id, category) values ('Helmet', 'Head');
+insert into tinfoilpunk_armorpart (id, category) values ('Headgear', 'Head');
+insert into tinfoilpunk_armorpart (id, category) values ('Shirt', 'Torso');
+insert into tinfoilpunk_armorpart (id, category) values ('Vest', 'Torso');
+insert into tinfoilpunk_armorpart (id, category) values ('Jacket', 'Torso');
+insert into tinfoilpunk_armorpart (id, category) values ('Armgear', 'Arms');
+insert into tinfoilpunk_armorpart (id, category) values ('Pants', 'Legs');
+insert into tinfoilpunk_armorpart (id, category) values ('Leggear', 'Legs');
 
--- Armor materials
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Leather',1);
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Light Kevlar',2);
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Steel',2);
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Medium Kevlar',3);
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Flack',3);
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Nylon',3);
-insert into tinfoilpunk_armormaterial (id,lvl) values ('Heavy Kevlar',4);
+--Armor Bonus SP
+insert into tinfoilpunk_armorbonussp (id, pts_from, pts_to) values (5,0,4);
+insert into tinfoilpunk_armorbonussp (id, pts_from, pts_to) values (4,5,8);
+insert into tinfoilpunk_armorbonussp (id, pts_from, pts_to) values (3,9,14);
+insert into tinfoilpunk_armorbonussp (id, pts_from, pts_to) values (2,15,20);
+insert into tinfoilpunk_armorbonussp (id, pts_from, pts_to) values (1,21,26);
+insert into tinfoilpunk_armorbonussp (id, pts_from, pts_to) values (0,27,null);
 
 -- Armor
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Vest','Leather',0,4,0,0,0,0,0,50);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Jacket','Leather',0,4,4,4,0,0,0,70);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Pants','Leather',0,0,0,0,4,4,0,30);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Vest','Light Kevlar',0,10,0,0,0,0,0,90);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Jacket','Light Kevlar',0,14,14,14,0,0,0,150);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Pants','Light Kevlar',0,0,0,0,10,10,0,70);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Helmet','Steel',14,0,0,0,0,0,0,20);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Vest','Flack',0,20,0,0,0,0,1,200);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Jacket','Medium Kevlar',0,18,18,18,0,0,1,200);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Pants','Flack',0,0,0,0,20,20,1,200);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Helmet','Nylon',20,0,0,0,0,0,0,100);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Jacket','Heavy Kevlar',0,20,20,20,0,0,2,250);
-insert into tinfoilpunk_armor (part_id,material_id,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,ev,cost) values ('Vest','Heavy Kevlar',0,25,0,0,0,0,3,250);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Steel Helmet','Helmet',1,0, 14,0,0,0,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Kevlar Helmet','Helmet',2,0, 16,0,0,0,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Nylon Helmet','Helmet',3,0, 20,0,0,0,0,0, 0);
 
--- create table npc_weapon_roll (
---     pts_from number,
---     pts_to number,
---     weapon_type text,
---     weapon_subtype text
--- );
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (1,1,'MEL','L');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (2,2,'P','L');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (3,3,'P','M');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (4,5,'P','H');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (6,6,'SMG','L');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (7,7,'RIF','L');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (8,8,'RIF','M');
--- insert into npc_weapon_roll (pts_from, pts_to, weapon_type, weapon_subtype) values (9,null,'RIF','H');
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Balaclava','Headgear',1,0, 3,0,0,0,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Visor','Headgear',2,0, 7,0,0,0,0,0, 0);
 
---create table npc_armor_roll (
---    pts_from number,
---    pts_to number,
---    material text
---);
---
---insert into npc_armor_roll (pts_from, pts_to, material) values (1,2,'Leather');
---insert into npc_armor_roll (pts_from, pts_to, material) values (3,4,'Light Kevlar');
---insert into npc_armor_roll (pts_from, pts_to, material) values (5,7,'Medium Kevlar');
---insert into npc_armor_roll (pts_from, pts_to, material) values (8,9,'Heavy Kevlar');
---insert into npc_armor_roll (pts_from, pts_to, material) values (10,null,'MetalGear');
---
---
---create view weapon_cat_sort as
---    select 'Light Pistols' cat, 1 idx union all
---    select 'Medium Pistols' cat, 2 idx union all
---    select 'Heavy Pistols' cat, 3 idx union all
---    select 'Very Heavy Pistols' cat, 4 idx union all
---    select 'Light Submachineguns' cat, 5 idx union all
---    select 'Medium Submachineguns' cat, 6 idx union all
---    select 'Heavy Submachineguns' cat, 7 idx union all
---    select 'Shotguns' cat, 8 idx union all
---    select 'Light Rifles' cat, 9 idx union all
---    select 'Medium Rifles' cat, 10 idx union all
---    select 'Heavy Rifles' cat, 11 idx union all
---    select 'Heavy Weapons' cat, 12 idx union all
---    select 'Light Melee Weapons' cat, 13 idx union all
---    select 'Melee Weapons' cat, 14 idx union all
---    select 'Exotic Weapons' cat, 15 idx union all
---    select 'Pistols' cat, 16 idx union all
---    select 'Submachineguns' cat, 17 idx union all
---    select 'Rifles' cat, 18 idx
---;
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Denim Shirt','Shirt',1,0, 0,4,4,4,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Leather Shirt','Shirt',2,0, 0,10,10,10,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Kevlar Shirt','Shirt',3,1, 0,14,14,14,0,0, 0);
+
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Kelvar Vest','Vest',1,0, 0,14,0,0,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Light Plated Vest','Vest',2,1, 0,20,0,0,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Heavy Plated Vest','Vest',3,2, 0,25,0,0,0,0, 0);
+
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Denim Jacket','Jacket',1,0, 0,4,4,4,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Leather Jacket','Jacket',2,0, 0,14,14,14,0,0, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Kevlar Jacket','Jacket',3,2, 0,20,20,20,0,0, 0);
+
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Nylon Elbowguards','Armgear',1,0, 0,0,14,14,0,0, 0);
+
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Denim Pants','Pants',1,0, 0,0,0,0,4,4, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Kevlar Pants','Pants',2,1, 0,0,0,0,14,14, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Heavy Kevlar Pants','Pants',3,2, 0,0,0,0,20,20, 0);
+
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Heavy Boots','Leggear',1,0, 0,0,0,0,10,10, 0);
+insert into tinfoilpunk_armor (id,part_id,lvl,ev,sp_head,sp_torso,sp_larm,sp_rarm,sp_lleg,sp_rleg,cost) values ('Plated Shinguards','Leggear',2,1, 0,0,0,0,14,14, 0);

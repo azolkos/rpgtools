@@ -1,5 +1,5 @@
 from tinfoilpunk.models import (
-    Armor, ArmorPart, BodyPart, BodyType, CareerSkill, Level, Npc, Race,
+    Armor, ArmorBonusSp, ArmorPart, BodyPart, BodyType, CareerSkill, Level, Npc, Race,
     RaceBonus, Role, Skill, Stat, Tinfoilware, Weapon, Wound)
 
 
@@ -22,12 +22,8 @@ def get_globals():
     items['WEAPONS'] = Weapon.objects.all()
 
     items['ARMOR_PARTS'] = ArmorPart.objects.order_by('id')
-    items['ARMOR'] = Armor.objects.all()
-
-    items['ARMOR_HELMET'] = Armor.objects.filter(part_id__exact='Helmet').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
-    items['ARMOR_JACKET'] = Armor.objects.filter(part_id__exact='Jacket').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
-    items['ARMOR_VEST'] = Armor.objects.filter(part_id__exact='Vest').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
-    items['ARMOR_PANTS'] = Armor.objects.filter(part_id__exact='Pants').order_by('sp_head', 'sp_torso', 'sp_larm', 'sp_lleg')
+    items['ARMOR_BONUS'] = ArmorBonusSp.objects.all()
+    items['ARMOR'] = Armor.objects.order_by('part_id')
 
     items['BODY_PARTS'] = BodyPart.objects.order_by('idx')
     items['BODY_TYPES'] = BodyType.objects.order_by('pts_from')

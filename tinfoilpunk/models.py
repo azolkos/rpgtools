@@ -180,26 +180,18 @@ class ArmorPart(models.Model):
     def __str__(self):
         return self.id
     id = models.CharField(max_length=20, primary_key=True)
+    category = models.CharField(max_length=20)
 
     class Meta:
         verbose_name_plural = 'Armor Parts'
-        ordering = ('id',)
-
-class ArmorMaterial(models.Model):
-    def __str__(self):
-        return self.id
-    id = models.CharField(max_length=30, primary_key=True)
-    lvl = models.IntegerField()
-
-    class Meta:
-        verbose_name_plural = 'Armor Materials'
-        ordering = ('lvl',)
+        ordering = ('category', 'id')
 
 class Armor(models.Model):
     def __str__(self):
-        return self.material.id + ' ' + self.part.id
+        return self.id
+    id = models.CharField(max_length=40, primary_key=True)
     part = models.ForeignKey(ArmorPart, models.CASCADE, related_name='part')
-    material = models.ForeignKey(ArmorMaterial, models.CASCADE, related_name='material')
+    lvl = models.IntegerField()
     sp_head = models.IntegerField()
     sp_torso = models.IntegerField()
     sp_larm = models.IntegerField()
@@ -210,7 +202,18 @@ class Armor(models.Model):
     cost = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        ordering = ('part', 'material')
+        ordering = ('part', 'lvl', 'id')
+
+class ArmorBonusSp(models.Model):
+    def __str__(self):
+        return str(self.id)
+
+    id = models.IntegerField(primary_key=True)
+    pts_from = models.IntegerField()
+    pts_to = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Armor Bonus SP'
 
 class Tinfoilware(models.Model):
     def __str__(self):
@@ -282,7 +285,7 @@ class NpcTinfoilware(models.Model):
 
 class NpcArmor(models.Model):
     def __str__(self):
-        return '#' + str(self.npc.id) + ': ' + self.armor.material.id + ' ' + self.armor.part.id
+        return '#' + str(self.npc.id) + ': ' + self.armor.id
     npc = models.ForeignKey(Npc, models.CASCADE)
     armor = models.ForeignKey(Armor, models.CASCADE)
 

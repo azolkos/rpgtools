@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import (Armor, ArmorMaterial, ArmorPart, BodyPart, BodyType,
+from .models import (Armor, ArmorBonusSp, ArmorPart, BodyPart, BodyType,
                      CareerSkill, Level, Race, RaceBonus, Role, Skill, Stat,
                      Tinfoilware, Weapon, WeaponAvailability,
                      WeaponConcealability, WeaponReliability, WeaponSubtype,
@@ -54,8 +54,14 @@ class WeaponSubtypeAdmin(admin.ModelAdmin):
 class WeaponAdmin(admin.ModelAdmin):
     list_display = ('id', 'w_type_id', 'w_subtype_id', 'accuracy', 'w_concealability_id', 'w_availability_id', 'damage', 'ammo', 'shots', 'rof', 'w_reliability_id', 'weapon_range', 'cost', 'info')
 
+class ArmorBonusSpAdmin(admin.ModelAdmin):
+    list_display = ('id', 'pts_from', 'pts_to')
+
+class ArmorPartAdmin(admin.ModelAdmin):
+    list_display = ('id', 'category')
+
 class ArmorAdmin(admin.ModelAdmin):
-    list_display = ('part_id', 'material_id', 'sp_head', 'sp_torso', 'sp_larm', 'sp_rarm', 'sp_lleg', 'sp_rleg')
+    list_display = ('id', 'part_id', 'lvl', 'ev', 'sp_head', 'sp_torso', 'sp_larm', 'sp_rarm', 'sp_lleg', 'sp_rleg')
 
 class TinfoilwareAdmin(admin.ModelAdmin):
     list_display = ('id', 'category', 'info')
@@ -95,8 +101,8 @@ admin.site.register(WeaponAvailability, WeaponAvailabilityAdmin)
 admin.site.register(WeaponReliability, WeaponReliabilityAdmin)
 admin.site.register(WeaponSubtype, WeaponSubtypeAdmin)
 admin.site.register(Weapon, WeaponAdmin)
-admin.site.register(ArmorPart)
-admin.site.register(ArmorMaterial)
+admin.site.register(ArmorBonusSp, ArmorBonusSpAdmin)
+admin.site.register(ArmorPart, ArmorPartAdmin)
 admin.site.register(Armor, ArmorAdmin)
 admin.site.register(Tinfoilware, TinfoilwareAdmin)
 admin.site.register(Npc, NpcAdmin)
