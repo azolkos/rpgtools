@@ -1,3 +1,17 @@
+function hideSidebar() {
+    document.getElementById('npc_sidebar').style.left = '-220px';
+    document.getElementById('npc_sidebar_toggle').style.left = '20px';
+    document.getElementById('npc_sidebar_toggle').innerHTML = '>';
+    document.getElementById('npc_sidebar_toggle').onclick = showSidebar;
+}
+
+function showSidebar() {
+    document.getElementById('npc_sidebar').style.left = '0';
+    document.getElementById('npc_sidebar_toggle').style.left = '160px';
+    document.getElementById('npc_sidebar_toggle').innerHTML = '<';
+    document.getElementById('npc_sidebar_toggle').onclick = hideSidebar;
+}
+
 function updateHitbox(id, w_max, w_min) {
     var this_elem = document.getElementById(id);
     var elem = id.split('_');

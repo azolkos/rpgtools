@@ -5,7 +5,8 @@
     <form action="" method="POST">
     {% csrf_token %}
 
-        <div class="sidebar">
+        <div id="npc_sidebar_toggle" class="w3-button w3-black w3-hover-black sidebar-hide" onClick="hideSidebar()"><</div>
+        <div id="npc_sidebar" class="sidebar">
             <p>Level:
                 <select name="0_level" class="sidebar-item">
                     <option value="Random">Random</option>
@@ -51,7 +52,7 @@
         {# NPC character sheets #}
         <div id="npc_page" class="w3-container w3-content w3-padding-64" style="max-width:900px">
         {% for npc, data in npc_sheets.items %}
-        <table id="npc_{{ npc }}" class="npc_sheet">
+        <table id="npc_{{ npc }}" name="npc_{{ npc }}" class="npc_sheet">
             <tr>
                 <input name="{{ npc }}_id" type="hidden" value="{{ data.npc.id }}"></input>
                 <th colspan="12" style="vertical-align: middle"><input name="{{ npc }}_handle" type="text" style="width: 100%; border: none; height: 20px;" placeholder="Handle" value="{{ data.npc.handle }}"></th>
